@@ -1,0 +1,21 @@
+[
+    {
+        "name": "entity.person",
+        "version": "0.0.1",
+        "attr_names": [
+            "legal_entity_id",
+            "first_name",
+            "last_name",
+            "corp_num",
+            "org_type",
+            "address_line_1",
+            "address_line_2",
+            "city",
+            "province",
+            "postal_code",
+            "country",
+            "effective_date",
+            "end_date"
+        ]
+    }
+]

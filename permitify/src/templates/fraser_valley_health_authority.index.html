@@ -1,0 +1,22 @@
+{% extends "bcgov.index.html" %}
+{% load static %}
+
+{% block extrahead %}
+  <link rel="stylesheet" href="{% static "css/neutral.css" %}">
+{% endblock %}
+
+{% block header %}
+  <header class="fraserhealth">
+    <div class="container">
+      <a href="https://www.fraserhealth.ca/" tabindex="-1">
+        <img class="header-logo"
+           tabindex="-1" alt="Fraser Health Authority"
+           src="{% static "img/fraserhealth-logo.png" %}">
+      </a>
+    </div>
+  </header>
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}

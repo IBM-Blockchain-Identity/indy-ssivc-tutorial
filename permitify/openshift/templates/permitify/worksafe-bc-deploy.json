@@ -1,0 +1,387 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "${NAME}-deployment-template",
+    "annotations": {
+      "description": "Deployment template for a django server.",
+      "tags": "django",
+      "iconClass": "icon-python"
+    }
+  },
+  "objects": [
+    {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${NAME}",
+        "annotations": {
+          "description": "Exposes and load balances the application pods"
+        }
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "8080-tcp",
+            "port": 8080,
+            "targetPort": 8080
+          }
+        ],
+        "selector": {
+          "name": "${NAME}"
+        }
+      }
+    },
+    {
+      "kind": "Route",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${NAME}"
+      },
+      "spec": {
+        "host": "${APPLICATION_DOMAIN}",
+        "port": {
+          "targetPort": "8080-tcp"
+        },
+        "tls": {
+          "insecureEdgeTerminationPolicy": "Redirect",
+          "termination": "edge"
+        },
+        "to": {
+          "kind": "Service",
+          "name": "${NAME}",
+          "weight": 100
+        }
+      }
+    },
+    {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata":
+      {
+        "name": "${NAME}",
+        "labels":
+        {
+          "app": "${NAME}",
+          "template": "${NAME}-deployment-template"
+        }
+      },
+      "spec":
+      {
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
+        "resources":
+        {
+          "requests":
+          {
+            "storage": "${PERSISTENT_VOLUME_SIZE}"
+          }
+        }
+      }
+    },
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${NAME}",
+        "annotations": {
+          "description": "Defines how to deploy the application server"
+        }
+      },
+      "spec": {
+        "strategy": {
+          "type": "Rolling"
+        },
+        "triggers": [
+          {
+            "type": "ImageChange",
+            "imageChangeParams": {
+              "automatic": true,
+              "containerNames": [
+                "${NAME}"
+              ],
+              "from": {
+                "kind": "ImageStreamTag",
+                "namespace": "${IMAGE_NAMESPACE}",
+                "name": "${SOURCE_IMAGE_NAME}:${TAG_NAME}"
+              }
+            }
+          },
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "replicas": 1,
+        "selector": {
+          "name": "${NAME}"
+        },
+        "template": {
+          "metadata": {
+            "name": "${NAME}",
+            "labels": {
+              "name": "${NAME}"
+            }
+          },
+          "spec": {
+            "volumes": [
+              {
+                "name": "${NAME}-data",
+                "persistentVolumeClaim":
+                {
+                  "claimName": "${NAME}"
+                }
+              }
+            ],
+            "containers": [
+              {
+                "name": "${NAME}",
+                "image": " ",
+                "ports": [
+                  {
+                    "containerPort": 8080,
+                    "protocol": "TCP"
+                  }
+                ],
+                "readinessProbe": {
+                  "timeoutSeconds": 3,
+                  "initialDelaySeconds": 3,
+                  "httpGet": {
+                    "path": "/",
+                    "port": 8080
+                  }
+                },
+                "livenessProbe": {
+                  "timeoutSeconds": 3,
+                  "initialDelaySeconds": 300,
+                  "httpGet": {
+                    "path": "/",
+                    "port": 8080
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "${NAME}-data",
+                    "mountPath": "${MOUNT_PATH}"
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "APP_CONFIG",
+                    "value": "${APP_CONFIG}"
+                  },
+                  {
+                    "name": "DJANGO_SECRET_KEY",
+                    "value": "${DJANGO_SECRET_KEY}"
+                  },
+                  {
+                    "name": "DJANGO_DEBUG",
+                    "value": "${DJANGO_DEBUG}"
+                  },
+                  {
+                    "name": "TEMPLATE_NAME",
+                    "value": "${TEMPLATE_NAME}"
+                  },
+                  {
+                    "name": "APPLICATION_IP",
+                    "value": "${APPLICATION_IP}"
+                  },
+                  {
+                    "name": "APPLICATION_PORT",
+                    "value": "${APPLICATION_PORT}"
+                  },
+                  {
+                    "name": "THE_ORG_BOOK_API_URL",
+                    "value": "${THE_ORG_BOOK_API_URL}"
+                  },
+                  {
+                    "name": "THE_ORG_BOOK_APP_URL",
+                    "value": "${THE_ORG_BOOK_APP_URL}"
+                  },
+                  {
+                    "name": "APPLICATION_URL",
+                    "value": "${APPLICATION_URL}"
+                  },
+                  {
+                    "name": "INDY_WALLET_SEED",
+                    "value": "${INDY_WALLET_SEED}"
+                  },
+                  {
+                    "name": "TOB_INDY_SEED",
+                    "value": "${TOB_INDY_SEED}"
+                  },
+                  {
+                    "name": "LEDGER_URL",
+                    "value": "${LEDGER_URL}"
+                  }
+                ],
+                "resources": {
+                  "limits": {
+                    "memory": "${MEMORY_LIMIT}"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "HorizontalPodAutoscaler",
+      "apiVersion": "autoscaling/v1",
+      "metadata": {
+        "name": "${NAME}",
+        "labels": {
+          "app": "${NAME}"
+        }
+      },
+      "spec": {
+        "scaleTargetRef": {
+          "kind": "DeploymentConfig",
+          "name": "${NAME}"
+        },
+        "minReplicas": 1,
+        "maxReplicas": 1
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "name": "NAME",
+      "displayName": "Name",
+      "description": "The name assigned to all of the OpenShift resources associated to the server instance.",
+      "required": true,
+      "value": "worksafe-bc"
+    },
+    {
+      "name": "SOURCE_IMAGE_NAME",
+      "displayName": "Source Image Name",
+      "description": "The name of the image to use for this resource.",
+      "required": true,
+      "value": "permitify"
+    },
+    {
+      "name": "IMAGE_NAMESPACE",
+      "displayName": "Image Namespace",
+      "required": true,
+      "description": "The namespace of the OpenShift project containing the imagestream for the application.",
+      "value": "devex-von-permitify-tools"
+    },
+    {
+      "name": "MEMORY_LIMIT",
+      "displayName": "Memory Limit",
+      "required": true,
+      "description": "Maximum amount of memory the container can use.",
+      "value": "512Mi"
+    },
+    {
+      "name": "APPLICATION_DOMAIN",
+      "displayName": "Application Hostname",
+      "description": "The exposed hostname that will route to the Django service, if left blank a value will be defaulted.",
+      "value": ""
+    },
+    {
+      "name": "APP_CONFIG",
+      "displayName": "Application Configuration File Path",
+      "description": "Relative path to Gunicorn configuration file (optional)."
+    },
+    {
+      "name": "DJANGO_SECRET_KEY",
+      "displayName": "Django Secret Key",
+      "description": "Set this to a long random string.",
+      "generate": "expression",
+      "from": "[\\w]{50}"
+    },
+    {
+      "name": "DJANGO_DEBUG",
+      "displayName": "Django Debug",
+      "description": "If Django is in debug mode",
+      "required": true,
+      "value": "False"
+    },
+	  {
+      "name": "TAG_NAME",
+      "displayName": "Environment TAG name",
+      "description": "The TAG name for this environment, e.g., dev, test, prod",
+      "value": "dev",
+      "required": true
+    },
+    {
+      "name": "PERSISTENT_VOLUME_SIZE",
+      "displayName": "Persistent Volume Size",
+      "description": "The size of the persistent volume , e.g. 512Mi, 1Gi, 2Gi.",
+      "required": true,
+      "value": "1Gi"
+    },
+    {
+      "name": "MOUNT_PATH",
+      "displayName": "Mount Path",
+      "description": "The path to mount the persistent volume.",
+      "required": true,
+      "value": "/app/.indy_client/wallet"
+    },
+    {
+      "name": "TEMPLATE_NAME",
+      "displayName": "Template Name",
+      "description": "The name of the site template to use for the application instance.",
+      "required": true,
+      "value": "worksafe_bc"
+    },
+    {
+      "name": "APPLICATION_IP",
+      "displayName": "Application IP",
+      "description": "The internal IP address to use when hosting the application instance.",
+      "required": true,
+      "value": "0.0.0.0"
+    },
+    {
+      "name": "APPLICATION_PORT",
+      "displayName": "Application Port",
+      "description": "The internal port to use when hosting the application instance.",
+      "required": true,
+      "value": "8080"
+    },
+    {
+      "name": "THE_ORG_BOOK_API_URL",
+      "displayName": "TheOrgBook API Base URL",
+      "description": "The base URL for TheOrgBook's API.",
+      "required": true,
+      "value": "https://django-devex-von-dev.pathfinder.gov.bc.ca/api/v1"
+    },
+    {
+      "name": "THE_ORG_BOOK_APP_URL",
+      "displayName": "TheOrgBook APP Base URL",
+      "description": "The base URL for TheOrgBook.",
+      "required": true,
+      "value": "https://devex-von-dev.pathfinder.gov.bc.ca"
+    },
+    {
+      "name": "APPLICATION_URL",
+      "displayName": "Application url",
+      "description": "This service's url.",
+      "required": true,
+      "value": "https://worksafe-bc-devex-von-permitify-dev.pathfinder.gov.bc.ca"
+    },
+    {
+      "name": "INDY_WALLET_SEED",
+      "displayName": "Indy Wallet Seed",
+      "description": "The seed that the indy wallet uses to generate predictable keys.",
+      "required": true,
+      "value": "worksafe_bc_dev_0000000000000000"
+    },
+    {
+      "name": "TOB_INDY_SEED",
+      "displayName": "TheOrgBook Indy Wallet Seed",
+      "description": "The seed that TheOrgBook uses to generate predictable keys.",
+      "required": true,
+      "value": "the_org_book_dev_000000000000000"
+    },
+    {
+      "name": "LEDGER_URL",
+      "displayName": "Ledger URL",
+      "description": "The URL for a running instance of von-network.",
+      "required": true,
+      "value": "http://138.197.170.136"
+    }
+  ]
+}

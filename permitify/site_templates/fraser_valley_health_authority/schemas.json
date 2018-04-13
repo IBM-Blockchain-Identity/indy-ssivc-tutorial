@@ -1,0 +1,22 @@
+[
+    {
+        "name": "operating_permit.fraser_valley_health_authority",
+        "version": "1.0.31",
+        "attr_names": [
+            "legal_entity_id",
+            "site_name",
+            "addressee",
+            "address_line_1",
+            "address_line_2",
+            "city",
+            "province",
+            "postal_code",
+            "country",
+            "application_type",
+            "capacity",
+            "tobacco",
+            "months_of_operation",
+            "effective_date"
+        ]
+    }
+]

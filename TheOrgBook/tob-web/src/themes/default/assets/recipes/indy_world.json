@@ -1,0 +1,42 @@
+{
+  "title": "Indy World Demo - Graduate, Get a job, Apply for a loan",
+  "claimTypes": [
+    {
+    "title": "Gov ID - Your Online Identity",
+    "schemaName": "entity.person",
+    "regText": "Enroll for online identity"
+    },
+    {
+    "title": "Faber College - Get Transcript",
+    "schemaName": "transcript.faber_college",
+    "regText": "Get college transcript",
+    "depends": [
+      "entity.person"
+    ]
+    },
+    {
+    "title": "Acme Corp - Job Application",
+    "schemaName": "job_application.acme_corp",
+    "regText": "Apply for a job",
+    "depends":[
+      "transcript.faber_college"
+    ]
+    },
+    {
+    "title": "Acme Corp - HR Department",
+    "schemaName": "job_certificate.acme_corp",
+    "regText": "Issue certificate for a job",
+    "depends": [
+      "job_application.acme_corp"
+    ]
+    },
+    {
+    "title": "Thrift Bank - Loan Application",
+    "schemaName": "loan_application.thrift_bank",
+    "regText": "Apply for a loan",
+    "depends": [
+      "job_certificate.acme_corp"
+    ]
+    }
+  ]
+}

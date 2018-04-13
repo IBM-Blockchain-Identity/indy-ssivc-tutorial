@@ -1,0 +1,145 @@
+version: '3'
+services:
+
+  person:
+    image: permitify
+    environment:
+      PYTHON_ENV: development
+      DISCONNECTED: '${DISCONNECTED-false}'
+      TEMPLATE_NAME: person
+      THE_ORG_BOOK_API_URL: ${THE_ORG_BOOK_API_URL}
+      THE_ORG_BOOK_APP_URL: ${THE_ORG_BOOK_APP_URL}
+      APPLICATION_IP: 0.0.0.0
+      APPLICATION_PORT: 8080
+      APPLICATION_URL: ${APPLICATION_URL}:5000
+      INDY_WALLET_SEED: bc_registries_000000000000000000
+      LEDGER_URL: ${LEDGER_URL}
+      TOB_INDY_SEED: ${TOB_INDY_SEED}
+    # links:
+    #   - postgres
+    volumes:
+      # - ../src:/app
+      # - ../site_templates:/app/site_templates
+      - person_wallet:/app/.indy_client/wallet
+    ports:
+      - 5000:8080
+    networks:
+      - indy-world
+
+  faber_college:
+    image: permitify
+    environment:
+      PYTHON_ENV: development
+      DISCONNECTED: '${DISCONNECTED-false}'
+      TEMPLATE_NAME: faber_college
+      THE_ORG_BOOK_API_URL: ${THE_ORG_BOOK_API_URL}
+      THE_ORG_BOOK_APP_URL: ${THE_ORG_BOOK_APP_URL}
+      APPLICATION_IP: 0.0.0.0
+      APPLICATION_PORT: 8080
+      APPLICATION_URL: ${APPLICATION_URL}:5006
+      TOB_INDY_SEED: ${TOB_INDY_SEED}
+      INDY_WALLET_SEED: faber_college_000000000000000000
+      LEDGER_URL: ${LEDGER_URL}
+    # links:
+    #   - postgres
+    volumes:
+      # - ../src:/app
+      # - ../site_templates:/app/site_templates
+      - faber_college_wallet:/app/.indy_client/wallet
+    ports:
+      - 5006:8080
+    networks:
+      - indy-world
+
+  acme_corp_apply:
+    image: permitify
+    environment:
+      PYTHON_ENV: development
+      DISCONNECTED: '${DISCONNECTED-false}'
+      TEMPLATE_NAME: acme_corp_apply
+      THE_ORG_BOOK_API_URL: ${THE_ORG_BOOK_API_URL}
+      THE_ORG_BOOK_APP_URL: ${THE_ORG_BOOK_APP_URL}
+      APPLICATION_IP: 0.0.0.0
+      APPLICATION_PORT: 8080
+      APPLICATION_URL: ${APPLICATION_URL}:5007
+      TOB_INDY_SEED: ${TOB_INDY_SEED}
+      INDY_WALLET_SEED: acme_corp_apply00000000000000000
+      LEDGER_URL: ${LEDGER_URL}
+    # links:
+    #   - postgres
+    volumes:
+      # - ../src:/app
+      # - ../site_templates:/app/site_templates
+      - acme_corp_apply_wallet:/app/.indy_client/wallet
+    ports:
+      - 5007:8080
+    networks:
+      - indy-world
+
+  acme_corp:
+    image: permitify
+    environment:
+      PYTHON_ENV: development
+      DISCONNECTED: '${DISCONNECTED-false}'
+      TEMPLATE_NAME: acme_corp
+      THE_ORG_BOOK_API_URL: ${THE_ORG_BOOK_API_URL}
+      THE_ORG_BOOK_APP_URL: ${THE_ORG_BOOK_APP_URL}
+      APPLICATION_IP: 0.0.0.0
+      APPLICATION_PORT: 8080
+      APPLICATION_URL: ${APPLICATION_URL}:5008
+      TOB_INDY_SEED: ${TOB_INDY_SEED}
+      INDY_WALLET_SEED: acme_corp_0000000000000000000000
+      LEDGER_URL: ${LEDGER_URL}
+    # links:
+    #   - postgres
+    volumes:
+      # - ../src:/app
+      # - ../site_templates:/app/site_templates
+      - acme_corp_wallet:/app/.indy_client/wallet
+    ports:
+      - 5008:8080
+    networks:
+      - indy-world
+
+  thrift_bank:
+    image: permitify
+    environment:
+      PYTHON_ENV: development
+      DISCONNECTED: '${DISCONNECTED-false}'
+      TEMPLATE_NAME: thrift_bank
+      THE_ORG_BOOK_API_URL: ${THE_ORG_BOOK_API_URL}
+      THE_ORG_BOOK_APP_URL: ${THE_ORG_BOOK_APP_URL}
+      APPLICATION_IP: 0.0.0.0
+      APPLICATION_PORT: 8080
+      APPLICATION_URL: ${APPLICATION_URL}:5009
+      TOB_INDY_SEED: ${TOB_INDY_SEED}
+      INDY_WALLET_SEED: thrift_bank_00000000000000000000
+      LEDGER_URL: ${LEDGER_URL}
+    # links:
+    #   - postgres
+    volumes:
+      # - ../src:/app
+      # - ../site_templates:/app/site_templates
+      - thrift_bank_wallet:/app/.indy_client/wallet
+    ports:
+      - 5009:8080
+    networks:
+      - indy-world
+
+
+  # postgres:
+  #   image: postgres
+  #   ports:
+  #     - '5432:5432'
+
+volumes:
+  person_wallet:
+  faber_college_wallet:
+  acme_corp_apply_wallet:
+  acme_corp_wallet:
+  thrift_bank_wallet:
+
+networks:
+  indy-world:
+    external:
+      name: indy-world

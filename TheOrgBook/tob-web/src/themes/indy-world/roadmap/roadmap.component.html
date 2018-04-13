@@ -1,0 +1,155 @@
+<section id="roadmap">
+
+  <div class="row" *ngIf="! inited && ! error">
+    <div class="col-sm-12 page-load">
+      <div class="loading-indicator"></div>
+    </div>
+  </div>
+
+  <section *ngIf="error" class="alert alert-danger">
+    <h4 class="panel-title"><span class="fa fa-exclamation-triangle"></span> &nbsp;{{error}}</h4>
+  </section>
+
+  <h1 class="roadmap-title mb-3" *ngIf="inited">{{recipe.title}}</h1>
+  <hr>
+
+  <ng-container *ngIf="! orgRecord && inited">
+    <div class="roadmap-tree mrgn-tp-lg mrgn-bttm-lg" *ngIf="recipe.tree">
+      <roadmap-tree [tree]="recipe.tree" [data]="recipe.claimTypes" [horizontal]="false"></roadmap-tree>
+    </div>
+    <div class="row">
+      <div class="col-md-5 col-md-push-7" *ngIf="registerLink">
+        <div class="well">
+          <p class="lead">If you have not yet been registered, you may enroll with Gov ID here:</p>
+          <a class="btn btn-lg btn-primary" [href]="registerLink + '?source=bcorgbook&lang=' + currentLang + '&recipe=' + recipeId"><span class="fas fa-address-card"></span> {{'recipe.register-link' | translate}}</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div [class]="(registerLink ? 'col-md-7 col-md-pull-5' : 'col-md-8 col-md-offset-2')">
+        <h2>Find a person</h2>
+
+        <div class="search-outer">
+          <div class="large-search">
+            <input type="text" id="searchInput" name="query" size="40" [placeholder]="'search.placeholder'|translate" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" (input)="inputEvent($event)" (focus)="inputEvent($event)" (blur)="inputEvent($event)">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="results mrgn-tp-lg" *ngIf="results.length || query">
+      <label class="control-label" translate>search.results-title</label>
+      <div *ngIf="searchType=='name' && !none">
+        <div class="row" *ngFor="let record of results">
+          <div class="col-sm-6">
+            <a href="" routerLink="." [queryParams]="{record: record.id}">{{record.legalName}}</a><br>
+            <!-- small>{{record.type.description}}</small -->
+          </div>
+          <div class="col-sm-6">
+            {{record.primaryLocation.street}}<br>
+            <small>{{record.primaryLocation.summary}}</small>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="none">
+        <div class="col-sm-6 text-muted">
+          <em translate>search.no-results</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="row results-nav" *ngIf="more || less">
+      <div class="col-sm-12 text-right">
+        <ul class="pager">
+          <li *ngIf="less">
+            <a href="#" (click)="prev(); $event.preventDefault();">&lt;&lt; {{'general.prev-link' | translate}}</a>
+          </li>
+          <li *ngIf="more">
+            <a href="#" (click)="next(); $event.preventDefault();">{{'general.next-link' | translate}} &gt;&gt;</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="orgRecord && inited">
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="card mb-3">
+          <div class="card-header clearfix">
+            <h2 class="card-title float-left">{{this.orgRecord.legalName}}</h2>
+            <a href="" [routerLink]="['/org', recordId] | localize" class="btn btn-primary float-right"><span class="fa fa-arrow-right"></span> {{'recipe.org-view-link' | translate}}</a>
+          </div>
+          <div class="card-body">
+            <dl class="row">
+              <dt class="col-sm-4" translate>org.location</dt>
+              <dd class="col-sm-8">
+                <div *ngFor="let loc of locations">
+                  <span *ngIf="loc.addressee != null">{{loc.addressee}}<br></span>
+                  {{loc.unitNumber && ('' + loc.unitNumber + '-')}}{{loc.streetAddress}}<br>
+                  {{loc.municipality}}, {{loc.province}}&nbsp; {{loc.postalCode}}<br>
+                  {{loc.country}}
+                </div>
+                <div *ngIf="!locations.length">
+                  <em class="text-muted" translate>general.none</em>
+                </div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Required Credentials</h2>
+    <hr>
+
+    <div class="row" *ngFor="let claimType of recipe.claimTypes">
+      <div class="col-12">
+        <div class="card bg-light mb-3">
+          <div class="card-header clearfix">
+            <h2 class="card-title float-left">
+              <span class="fa fa-check-circle icon" *ngIf="claimType.cert"></span>
+              <span class="claim-title">{{ claimType.title }}</span>
+            </h2>
+            <a href="" [routerLink]="['/org', recordId, 'cert', claimType.cert.id] | localize" class="btn btn-primary float-right" *ngIf="claimType.cert"><span class="fa fa-arrow-right"></span> {{ (claimType.linkText || 'recipe.cert-view-link') | translate }}</a>
+            <a [href]="claimType.regLink + '?source=bcorgbook&source_id='+recordId+'&org_id='+orgRecord.orgId+'&lang='+currentLang+'&recipe='+recipeId" class="btn btn-primary float-right" *ngIf="! claimType.cert"><span class="fas fa-address-card"></span> {{ claimType.regText }}</a>
+          </div>
+          <div class="card-body" *ngIf="claimType.cert">
+            <dl class="row">
+              <dt class="col-sm-4" translate>cert.issuer</dt>
+              <dd class="col-sm-8">
+                <a *ngIf="claimType.cert.type.issuerURL" [href]="claimType.cert.type.issuerURL" rel="external">
+                  {{claimType.cert.issuer.name}}</a>
+                <small><span class="fas fa-external-link-alt"></span></small>
+              </dd>
+              <dt class="col-sm-4" translate>cert.effective-date</dt>
+              <dd class="col-sm-8">
+                {{claimType.cert.effectiveDate || '-'}}
+              </dd>
+              <dt class="col-sm-4" *ngIf="claimType.cert.endDate" translate>cert.expiry-date</dt>
+              <dd class="col-sm-8" *ngIf="claimType.cert.endDate">
+                {{claimType.cert.endDate || '-'}}
+              </dd>
+            </dl>
+          </div>
+          <div class="card-body empty" *ngIf="! claimType.cert">
+            <div class="depends" *ngIf="claimType.depends">
+              <h5 class="text-muted" translate>recipe.cert-depends-on</h5>
+              <ul class="depends-items">
+                <li [class]="'depends-item ' + (recipe.claimTypes[idx].cert ? 'found' : 'missing')" *ngFor="let idx of claimType.depends">
+                  <span class="fa fa-check-circle icon" *ngIf="recipe.claimTypes[idx].cert"></span>
+                  <span class="fa fa-times icon" *ngIf="! recipe.claimTypes[idx].cert"></span>
+                  {{ recipe.claimTypes[idx].title }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+</section>

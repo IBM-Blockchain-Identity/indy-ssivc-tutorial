@@ -1,0 +1,86 @@
+<section id="cert">
+  <div class="row" *ngIf="error">
+    <div class="col-sm-12">
+      {{error}}
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!loaded && !error">
+    <div class="col-sm-12 page-load">
+      <div class="loading-indicator"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <a [routerLink]="['/org', record.verifiableOrgId] | localize" class="mt-3 mb-3"><span class="fa fa-arrow-left"></span> {{'org.return-link' | translate}}</a>
+  </div>
+
+  <h1>{{record.org.legalName}}</h1>
+  <hr>
+  <div class="row" *ngIf="loaded">
+    <div class="col-md-8 col-sm-7">
+      <h2>{{record.type.claimType}}</h2>
+      <hr>
+
+      <section *ngIf="record.inactiveReason && record.inactiveReason.id" class="alert alert-danger">
+        <h2><span class="fa fa-exclamation-triangle"></span> {{'cert.inactive-message' | translate}} {{record.inactiveReason.reason}}</h2>
+      </section>
+
+      <dl class="row">
+        <dt class="col-sm-4" translate>cert.issuer</dt>
+        <dd class="col-sm-8">
+          <a [routerLink]="['issuer'] | localize">{{record.issuer.name}}</a>
+        </dd>
+
+        <dt class="col-sm-4" translate>cert.issuer-website</dt>
+        <dd class="col-sm-8">
+          <a [href]="record.type.issuerURL" rel="external">{{record.type.issuerURL}}</a>
+          <small><span class="fas fa-external-link-alt"></span></small>
+        </dd>
+
+        <dt class="col-sm-4" translate>cert.effective-date</dt>
+        <dd class="col-sm-8">
+          {{record.effectiveDate}}
+        </dd>
+
+        <dt class="col-sm-4" *ngIf="record.endDate" translate>cert.expiry-date</dt>
+        <dd class="col-sm-8" *ngIf="record.endDate">{{record.endDate}}</dd>
+
+        <dt class="col-sm-4" *ngIf="others && others.length" translate>cert.related-certs</dt>
+        <dd class="col-sm-8" *ngIf="others && others.length">
+          <div *ngFor="let rel of others">
+            <a [routerLink]="['/org', record.verifiableOrgId, 'cert', rel.id] | localize">{{rel.effectiveDate}}</a>
+          </div>
+        </dd>
+      </dl>
+    </div>
+    <div class="col-md-4 col-sm-5 hidden-xs">
+      <img src="assets/cert.svg" [class]="'color-' + record.color" alt="">
+    </div>
+  </div>
+
+  <div class="mt-3 mb-3 row">
+    <button type="button" [class]="'btn btn-primary btn-lg' + (verifying ? ' loading' : '')" (click)="verifyClaim($event)"><span class="fas fa-check"></span> {{'cert.verify-button-label' | translate}}</button>
+  </div>
+
+  <div class="row cert-verify" *ngIf="verifyResult || verifying">
+    <div class="col-sm-12" *ngIf="verifying">
+      <section class="alert alert-info">
+        <p translate>cert.requesting-proof</p>
+      </section>
+    </div>
+    <div class="col-sm-12" *ngIf="! verifying">
+      <div [class]="'verify-result card border-' + (verifyStatus == 'success' ? 'success' : 'warning')" *ngIf="verifyStatus && verifyStatus !== 'error'">
+        <h4 class="card-header">
+          {{'cert.verify-status' | translate}} {{verifyStatus}}
+        </h4>
+        <div class="card-body">
+          <pre>{{verifyResult}}</pre>
+        </div>
+      </div>
+      <section class="alert alert-danger" *ngIf="verifyStatus === 'error'">
+        <p>{{verifyResult}}</p>
+      </section>
+    </div>
+  </div>
+</section>

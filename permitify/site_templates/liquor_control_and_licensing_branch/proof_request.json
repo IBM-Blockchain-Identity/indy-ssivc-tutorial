@@ -1,0 +1,195 @@
+{
+  "name": "incorporation.bc_registries",
+  "version": "1.0.0",
+  "nonce": "1986273812765872",
+  "requested_attrs": {
+    "worksafe_letter_exists": {
+      "name": "legal_entity_id",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "restaurant_clearance_letter.worksafe_bc",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "pst_number_exists": {
+      "name": "legal_entity_id",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "pst_number.ministry_of_finance",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "operating_permit_exists": {
+      "name": "legal_entity_id",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "operating_permit.fraser_valley_health_authority",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "business_license_exists": {
+      "name": "legal_entity_id",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "business_license.city_of_surrey",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "address_line_1": {
+      "name": "address_line_1",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "address_line_2": {
+      "name": "address_line_2",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "addressee": {
+      "name": "addressee",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "city": {
+      "name": "city",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "corp_num": {
+      "name": "corp_num",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "country": {
+      "name": "country",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "effective_date": {
+      "name": "effective_date",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "end_date": {
+      "name": "end_date",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "legal_entity_id": {
+      "name": "legal_entity_id",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "legal_name": {
+      "name": "legal_name",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "org_type": {
+      "name": "org_type",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "postal_code": {
+      "name": "postal_code",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    },
+    "province": {
+      "name": "province",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "incorporation.bc_registries",
+            "version": "1.0.31"
+          }
+        }
+      ]
+    }
+  },
+  "requested_predicates": {}
+}

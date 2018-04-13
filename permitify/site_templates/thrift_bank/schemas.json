@@ -1,0 +1,16 @@
+[
+  {
+    "name": "loan_application.thrift_bank",
+    "version": "0.0.1",
+    "attr_names": [
+      "legal_entity_id",
+      "effective_date",
+      
+      "first_name",
+      "last_name",
+      "employee_status",
+      "experience",
+      "salary_bracket"
+    ]
+  }
+]

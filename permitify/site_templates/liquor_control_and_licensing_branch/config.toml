@@ -1,0 +1,237 @@
+# Agent info
+template_root = "bcgov.index.html"
+name = "Liquor Control and Licensing Branch"
+abbreviation = "Liquor Licensing"
+jurisdiction_name = "British Columbia"
+jurisdiction_abbreviation = "BC"
+
+# Webpage info
+title = "Liquor Control and Licensing Branch"
+description = "This is a description"
+explanation = "Use the form below to obtain a liquor license."
+
+# Forms:
+# 
+# These structures are used to build the forms
+# in the UI.
+
+[[forms]]
+name = "liquor_license"
+title = "Liquor Control and Licensing Branch"
+
+  [[forms.hidden]]
+  name = "schema"
+  value = "liquor_license.liquor_control_and_licensing_branch"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "legal_entity_id"
+  pretty = "Legal Entity ID"
+
+  [[forms.inputs]]
+  type = "number"
+  required = true
+  name = "number_of_employees"
+  pretty = "Number of Employees"
+
+  [[forms.inputs]]
+  type = "radio"
+  options = [
+    { value = true, pretty = "Yes" },
+    { value = false, pretty = "No" },
+  ]
+  required = true
+  name = "is_owner"
+  pretty = "The applicant is the owner of the business in respect of which the licence is to be issued or will become the owner before the licence is issued."
+
+  [[forms.inputs]]
+  type = "radio"
+  options = [
+    { value = true, pretty = "Yes" },
+    { value = false, pretty = "No" },
+  ]
+  required = true
+  name = "owner_agreement"
+  pretty = """
+    At the time of application, the applicant is:<br />
+      &nbsp;&nbsp;- The owner of or has an agreement to purchase the place or premises that will form the proposed establishment, or<br />
+      &nbsp;&nbsp;- The lessee or has a binding offer to lease the place or premises that will form the proposed establishment.
+  """
+
+  [[forms.inputs]]
+  type = "radio"
+  options = [
+    { value = true, pretty = "Yes" },
+    { value = false, pretty = "No" },
+  ]
+  required = true
+  name = "owner_premises"
+  pretty = """
+    At the time the licence is issued, the applicant will be:<br />
+      &nbsp;&nbsp;- The owner of the place or premises that forms the establishment, or<br />
+      &nbsp;&nbsp;- The lessee of the place or premises that forms the establishment (term no less than 12 months).
+  """
+
+  [[forms.inputs]]
+  type = "radio"
+  options = [
+    { value = true, pretty = "Yes" },
+    { value = false, pretty = "No" },
+  ]
+  required = true
+  name = "overlap"
+  pretty = "Will this establishment overlap a liquor primary licence (aka dual licence)?"
+
+  [[forms.inputs]]
+  type = "radio"
+  options = [
+    { value = true, pretty = "Yes" },
+    { value = false, pretty = "No" },
+  ]
+  required = true
+  name = "standalone_patio"
+  pretty = "Is your establishment a standalone patio with no interior seating?"
+
+  [[forms.inputs]]
+  type = "radio"
+  options = [
+    { value = true, pretty = "Yes" },
+    { value = false, pretty = "No" },
+  ]
+  required = true
+  name = "brewery"
+  pretty = "Is your establishment located at a winery, brewery, or distillery?"
+
+  [[forms.inputs]]
+  type = "radio"
+  options = [
+    { value = true, pretty = "Yes" },
+    { value = false, pretty = "No" },
+  ]
+  required = true
+  name = "treaty"
+  pretty = "Is your establishment located on Treaty First Nation land?"
+
+  # [[forms.inputs]]
+  # type = "open_close"
+  # required = true
+  # name = "hours_of_operation"
+  # pretty = "Sunday Hours"
+
+  # [[forms.inputs]]
+  # type = "open_close"
+  # required = true
+  # name = "hours_of_operation"
+  # pretty = "Monday Hours"
+
+  # [[forms.inputs]]
+  # type = "open_close"
+  # required = true
+  # name = "hours_of_operation"
+  # pretty = "Tuesday Hours"
+
+  # [[forms.inputs]]
+  # type = "open_close"
+  # required = true
+  # name = "hours_of_operation"
+  # pretty = "Wednesday Hours"
+
+  # [[forms.inputs]]
+  # type = "open_close"
+  # required = true
+  # name = "hours_of_operation"
+  # pretty = "Thursday Hours"
+
+  # [[forms.inputs]]
+  # type = "open_close"
+  # required = true
+  # name = "hours_of_operation"
+  # pretty = "Friday Hours"
+
+  # [[forms.inputs]]
+  # type = "open_close"
+  # required = true
+  # name = "hours_of_operation"
+  # pretty = "Saturday Hours"
+
+  [[forms.inputs]]
+  type = "radio"
+  options = [
+    { value = true, pretty = "Yes" },
+    { value = false, pretty = "No" },
+  ]
+  required = true
+  name = "dancing_permitted"
+  pretty = "Patron Participation Entertainment - dancing, karaoke or other types entertainment  that involve patron participation in the service area"
+
+  [[forms.inputs]]
+  type = "radio"
+  options = [
+    { value = true, pretty = "Yes" },
+    { value = false, pretty = "No" },
+  ]
+  required = true
+  name = "patio"
+  pretty = "Are you applying for a patio?"
+
+  [[forms.inputs]]
+  type = "radio"
+  options = [
+    { value = true, pretty = "Yes" },
+    { value = false, pretty = "No" },
+  ]
+  required = true
+  name = "catering"
+  pretty = "Catering Endorsement"
+
+  [[forms.inputs]]
+  type = "radio"
+  options = [
+    { value = true, pretty = "Yes" },
+    { value = false, pretty = "No" },
+  ]
+  required = true
+  name = "third_party"
+  pretty = "Third Party Operator"
+
+# Schema mappers:
+# 
+# One for each schema type.
+# 
+# Each mapper is invoked when a request is received
+# which contains value "schema" which maps to "for"
+# property.
+
+[[schema_mappers]]
+for = "liquor_license.liquor_control_and_licensing_branch"
+
+  [[schema_mappers.attributes]]
+  name = "legal_entity_id"
+  from ="request"
+  source = "legal_entity_id"
+
+  # [[schema_mappers.attributes]]
+  # name = "daily_hours_of_operation"
+  # from ="request"
+  # source = "hours_of_operation[]"
+
+  [[schema_mappers.attributes]]
+  name = "dancing_permitted"
+  from ="request"
+  source = "dancing_permitted"
+
+  [[schema_mappers.attributes]]
+  name = "patio"
+  from ="request"
+  source = "patio"
+
+  [[schema_mappers.attributes]]
+  name = "effective_date"
+  from ="helper"
+  source = "now"
+
+  [[schema_mappers.attributes]]
+  name = "end_date"
+  from ="helper"
+  source = "one_year"

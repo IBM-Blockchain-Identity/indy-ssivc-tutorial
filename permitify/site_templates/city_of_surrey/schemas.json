@@ -1,0 +1,20 @@
+[
+    {
+        "name": "business_license.city_of_surrey",
+        "version": "1.0.31",
+        "attr_names": [
+            "legal_entity_id",
+            "legal_name",
+            "addressee",
+            "address_line_1",
+            "address_line_2",
+            "city",
+            "province",
+            "postal_code",
+            "country",
+            "number_of_employees",
+            "effective_date",
+            "end_date"
+        ]
+    }
+]

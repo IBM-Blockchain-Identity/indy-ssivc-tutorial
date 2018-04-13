@@ -1,0 +1,183 @@
+<form action="{{ form.action|default:"/submit_claim" }}" method="{{ form.method|default:"post" }}" accept-charset="utf-8" name="{{ form.name }}" class="form well {{ form.class }}">
+    <fieldset>
+        <legend>{{ form.title }}</legend>
+        {% if form.explanation %}
+        <p class="form-explanation">{{ form.explanation }}</p>
+        {% endif %}
+        {% for input in form.hidden %}
+            <input type="hidden" name="{{ input.name }}" value="{{ input.value }}">
+        {% endfor %}
+        <div class="row">
+            <div class="col-md-8 col-md-push-2">
+                {% for input in form.inputs %}
+                <div class="form-group">
+                    {% if input.required %}
+                        <label class="control-label required" for="{{ input.prefix }}line1-input"><span class="field-name">{{ input.pretty | safe }}</span>
+                        {% if input.type != "radio" %}<span class="required">(required)</span>{% endif %}</label>
+                    {% else %}
+                        <label class="control-label" for="{{ input.name }}-input"><span class="field-name">{{ input.pretty | safe}}</span></label>
+                    {% endif %}
+                    {% if input.type == "address" %}
+                        <div class="form-address" id="{{ input.name }}-input">
+                            <!-- div class="row form-field">
+                                <div class="col-sm-12">
+                                    <label class="control-label" for="{{ input.prefix }}addressee-input"><span class="field-name">Attention</span></label>
+                                    <input class="form-control" type="text"
+                                        name="{{ input.prefix }}addressee"
+                                        id="{{ input.prefix }}addressee-input"
+                                        value="{{ proof_response.parsed_proof.addressee }}"
+                                        {% if input.disabled %}disabled{% endif %}>
+                                </div>
+                            </div -->
+                            <div class="row form-field">
+                                <div class="col-sm-12">
+                                    <label class="control-label" for="{{ input.prefix }}line1-input"><span class="field-name">Street Address</span></label>
+                                    <input class="form-control js-typeahead" type="text"
+                                           name="{{ input.prefix }}address_line_1"
+                                           id="{{ input.prefix }}line1-input"
+                                           value="{{ proof_response.parsed_proof.address_line_1 }}"
+                                           autocomplete="off"
+                                           placeholder="Type to search"
+                                           {% if input.required %}required{% endif %}
+                                           {% if input.disabled %}disabled{% endif %}>
+                                </div>
+                            </div>
+                            <div class="row form-field">
+                                <div class="col-sm-12">
+                                    <input class="form-control mrgn-tp-sm" type="text"
+                                        name="{{ input.prefix }}address_line_2"
+                                        id="{{ input.prefix }}line2-input"
+                                        value="{{ proof_response.parsed_proof.address_line_2 }}"
+                                        {% if input.disabled %}disabled{% endif %}>
+                                </div>
+                            </div>
+                            <div class="row form-field">
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="{{ input.prefix }}city-input"><span class="field-name">City</span></label>
+                                    <input class="form-control" type="text"
+                                        name="{{ input.prefix }}city"
+                                        id="{{ input.prefix }}city-input"
+                                        value="{{ proof_response.parsed_proof.city }}"
+                                        {% if input.required %}required{% endif %}
+                                        {% if input.disabled %}disabled{% endif %}>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="{{ input.prefix }}province-input"><span class="field-name">State/Province</span></label>
+                                    <input class="form-control" type="text"
+                                        name="{{ input.prefix }}province"
+                                        id="{{ input.prefix }}province-input"
+                                        value="{{ proof_response.parsed_proof.province }}"
+                                        {% if input.required %}required{% endif %}
+                                        {% if input.disabled %}disabled{% endif %}>
+                                    </input>
+                                </div>
+                            </div>
+                            <div class="row form-field">
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="{{ input.prefix }}postal_code-input"><span class="field-name">Postal Code</span></label>
+                                    <input class="form-control" type="text"
+                                        name="{{ input.prefix }}postal_code"
+                                        id="{{ input.prefix }}postal_code-input"
+                                        value="{{ proof_response.parsed_proof.postal_code }}"
+                                        {% if input.required %}required{% endif %}
+                                        {% if input.disabled %}disabled{% endif %}>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="{{ input.prefix }}country-input"><span class="field-name">Country</span></label>
+                                    <select class="form-control"
+                                        name="{{ input.prefix }}country"
+                                        id="{{ input.prefix }}country-input"
+                                        value="{{ proof_response.parsed_proof.country }}"
+                                        {% if input.required %}required{% endif %}
+                                        {% if input.disabled %}disabled{% endif %}>
+                                            <option value="CA" selected>Canada</option>
+                                            <option value="US" selected>United States</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif input.type == "select" %}
+                        <select
+                            class="form-control"
+                            name="{{ input.name }}"
+                            id="{{ input.name }}-input"
+                            {% if input.multiple %}multiple{% endif %}
+                            {% if input.required %}required{% endif %}
+                            {% if input.disabled %}disabled{% endif %}>
+                            {% for option in input.options %}
+                                <option value="{{ option }}">
+                                    {{ option }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    {% elif input.type == "radio" %}
+                        {% for opt in input.options %}
+                        <div class="{{ input.type }}">
+                            <input
+                                name="{{ input.name }}"
+                                type="{{ input.type }}"
+                                id="{{ input.name }}-{{ opt.value }}-input"
+                                value="{{ opt.value }}"
+                                {% if opt.checked %}checked{% endif %}
+                                {% if input.disabled or opt.disabled %}disabled{% endif %}
+                            ><label for="{{ input.name }}-{{ opt.value }}-input">{{ opt.pretty }}</label>
+                        </div>
+                        {% endfor %}
+                    {% elif input.type == "checkbox" or input.type == "radio" %}
+                        <div class="{{ input.type }}">
+                            <input
+                                name="{{ input.name }}"
+                                type="{{ input.type }}"
+                                id="{{ input.name }}-input"
+                                {% if input.checked %}checked{% endif %}
+                                {% if input.disabled %}disabled{% endif %}
+                            ><label for="{{ input.name }}-input">{{ input.text }}</label>
+                        </div>
+                    {% elif input.type == "textarea" %}
+                        <textarea
+                            class="form-control"
+                            name="{{ input.name }}"
+                            type="{{ input.type }}"
+                            id="{{ input.name }}-input"
+                            {% if input.disabled %}disabled{% endif %}
+                            ></textarea>
+                    {% elif input.type == "open_close" %}
+                        <div class="form-inline">
+                        <input
+                            class="form-control"
+                            type="time"
+                            name="{{ input.name }}[]"
+                            size="5"
+                            id="{{ input.name }}-open-input"
+                            placeholder="open"
+                            {% if input.required %}required{% endif %}
+                            {% if input.disabled %}disabled{% endif %}
+                        ><span style="padding: 0 1.5em">to</span><input
+                            class="form-control"
+                            type="time"
+                            name="{{ input.name }}[]"
+                            size="5"
+                            id="{{ input.name }}-close-input"
+                            placeholder="close"
+                            {% if input.required %}required{% endif %}
+                            {% if input.disabled %}disabled{% endif %}
+                        ></div>
+                    {% else %}
+                        <input
+                            class="form-control"
+                            type="{{ input.type }}"
+                            name="{{ input.name }}"
+                            size="{{ input.size }}"
+                            id="{{ input.name }}-input"
+                            value="{{ proof_response.parsed_proof|get_item:input.name|default_if_none:'' }}"
+                            {% if input.required %}required{% endif %}
+                            {% if input.disabled %}disabled{% endif %}
+                        >
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn submit-button">Submit</button>
+            </div>
+        </div>
+    </fieldset>
+</form>

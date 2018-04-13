@@ -1,0 +1,137 @@
+.page-content {
+	padding-bottom: 8rem;
+}
+.form {
+	margin-top: 2rem;
+}
+.form + .form {
+	margin-top: 4rem;
+}
+
+.control-label.required::before {
+	content: '*';
+	color: #b33;
+	display: inline-block;
+	position: relative;
+	left: -.5em;
+	width: .2em;
+}
+
+.legal-entity-id {
+  margin-top: 2rem;
+}
+
+.form-field + .form-field {
+	margin-top: 0.8rem;
+}
+
+@keyframes loading {
+    from {left: -100%; }
+    to { left: 100%; }
+}
+
+.btn.loading {
+  background-color: #ddd;
+  border-color: #bbb;
+  color: #666;
+  cursor: wait;
+  overflow: hidden;
+  position: relative;
+  text-shadow:0 2px 2px #fff;
+}
+.btn.loading::before {
+  animation: loading 1s linear infinite;
+  background-color: #2980b9;
+  background: linear-gradient(to right, #ddd, #2980b9, #ddd);
+  bottom: 0;
+  content: "";
+  height: 2px;
+  left: -100%;
+  position: absolute;
+  width: 50%;
+}
+
+.margin-xs { margin: .25em; }
+.margin-sm { margin: .5em; }
+.margin-md { margin: 1em; }
+.margin-lg { margin: 1.5em; }
+.margin-xl { margin: 3em; }
+
+.padding-xs { padding: .25em; }
+.padding-sm { padding: .5em; }
+.padding-md { padding: 1em; }
+.padding-lg { padding: 1.5em; }
+.padding-xl { padding: 3em; }
+
+/* typeahead classes */
+
+.typeahead__container {
+  position: relative;
+}
+.typeahead__container .typeahead__list, .typeahead__container .typeahead__dropdown,
+.typeahead__container .typeahead__hint, .typeahead__container + .typeahead__backdrop {
+  display: none !important;
+}
+.typeahead__container.result .typeahead__list, .typeahead__container.filter .typeahead__dropdown,
+.typeahead__container.hint .typeahead__hint, .typeahead__container.backdrop + .typeahead__backdrop {
+  display: block !important;
+}
+.typeahead__list {
+  position: absolute;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  text-align: left;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  background-clip: padding-box;
+}
+.typeahead__list > li {
+  position: relative;
+  border-top: solid 1px #ccc;
+}
+.typeahead__list > li:first-child {
+  border-top: none;
+}
+.typeahead__list > li > a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  clear: both;
+  color: #333;
+  text-decoration: none;
+}
+.typeahead__list > li:not([disabled]) > a:hover,
+.typeahead__list > li:not([disabled]) > a:focus,
+.typeahead__list > li:not([disabled]).active > a,
+.typeahead__dropdown > li:not([disabled]) > a:hover,
+.typeahead__dropdown > li:not([disabled]) > a:focus,
+.typeahead__dropdown > li:not([disabled]).active > a {
+  background-color: #f5f5f5;
+  color: #3c3c3c;
+}
+.typeahead__list.empty > li {
+  padding: 0.5rem 0.75rem;
+  color: #333;
+}
+.typeahead__cancel-button {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  line-height: 1.25;
+  padding: 0.5rem 0.75rem;
+  visibility: hidden;
+}
+.typeahead__container.cancel:not(.loading) .typeahead__cancel-button,
+.typeahead__label .typeahead__cancel-button {
+  visibility: visible;
+}
+

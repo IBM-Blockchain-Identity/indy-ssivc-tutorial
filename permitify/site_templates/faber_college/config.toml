@@ -1,0 +1,133 @@
+# Agent info
+template_root = "faber_college.index.html"
+name = "Faber College"
+abbreviation = "Faber"
+jurisdiction_name = "Faber"
+jurisdiction_abbreviation = "FAB"
+
+# Webpage info
+title = "Faber College Registry"
+description = "A quaint local college"
+
+# [[js_includes]]
+# src = "js/faber_college.js"
+
+# Forms:
+#
+# These structures are used to build the forms
+# in the UI.
+
+[[forms]]
+name = "transcript"
+title = "Transcript Request"
+explanation = "Use the form below to register as a student of Faber College"
+
+  [[forms.hidden]]
+  name = "schema"
+  value = "transcript.faber_college"
+
+  [[forms.inputs]]
+  type = "hidden"
+  #required = true
+  name = "legal_entity_id"
+  #pretty = "legal_entity_id"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "student_first_name"
+  pretty = "Student First Name"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "student_last_name"
+  pretty = "Student Last Name"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "ssn"
+  pretty = "SSN"
+
+  [[forms.inputs]]
+  type = "select"
+  options = [
+    "",
+    "Certificate",
+    "AA",
+    "BS",
+    "MS",
+    "PhD"
+  ]
+  required = true
+  name = "degree"
+  pretty = "Degree"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "year"
+  pretty = "Year"
+
+  [[forms.inputs]]
+  type = "select"
+  options = [
+    "",
+    "Graduated",
+    "Current",
+    "Dropout",
+    "CO"
+  ]
+  required = true
+  name = "status"
+  pretty = "Status"
+
+
+# Schema mappers:
+#
+# One for each schema type.
+#
+# Each mapper is invoked when a request is received
+# which contains value "schema" which maps to "for"
+# property.
+
+[[schema_mappers]]
+for = "transcript.faber_college"
+
+  [[schema_mappers.attributes]]
+  name = "legal_entity_id"
+  from ="request"
+  source = "legal_entity_id"
+
+  [[schema_mappers.attributes]]
+  name = "effective_date"
+  from ="helper"
+  source = "now"
+
+  [[schema_mappers.attributes]]
+  name = "student_first_name"
+  from ="request"
+  source = "student_first_name"
+
+  [[schema_mappers.attributes]]
+  name = "student_last_name"
+  from ="request"
+  source = "student_last_name"
+
+  [[schema_mappers.attributes]]
+  name = "ssn"
+  from ="request"
+  source = "ssn"
+
+  [[schema_mappers.attributes]]
+  name = "degree"
+  from ="request"
+  source = "degree"
+
+  [[schema_mappers.attributes]]
+  name = "status"
+  from ="request"
+  source = "status"
+
+

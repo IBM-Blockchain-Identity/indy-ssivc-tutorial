@@ -1,0 +1,53 @@
+{
+  "name": "job_certificate.acme_corp",
+  "version": "1.0.0",
+  "nonce": "1986273812765872",
+  "requested_attrs": {
+    "legal_entity_id": {
+      "name": "legal_entity_id",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "job_application.acme_corp",
+            "version": "0.0.1"
+          }
+        }
+      ]
+    },
+    "effective_date": {
+      "name": "effective_date",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "job_application.acme_corp",
+            "version": "0.0.1"
+          }
+        }
+      ]
+    },
+
+    "first_name": {
+      "name": "first_name",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "job_application.acme_corp",
+            "version": "0.0.1"
+          }
+        }
+      ]
+    },
+    "last_name": {
+      "name": "last_name",
+      "restrictions": [
+        {
+          "schema_key": {
+            "name": "job_application.acme_corp",
+            "version": "0.0.1"
+          }
+        }
+      ]
+    }
+  },
+  "requested_predicates": {}
+}

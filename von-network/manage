@@ -1,0 +1,54 @@
+#!/bin/bash
+
+set -e
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+export DOCKERHOST=$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)
+export COMPOSE_PROJECT_NAME="von"
+
+export DOCKERHOST=$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)
+
+cd "$SCRIPT_HOME"
+
+case "$1" in
+  start)
+      if [ ! "$(docker network ls -q -f name=indy-world)" ]; then
+        docker network create --subnet=172.16.10.0/24 --ip-range=172.16.10.0/24 indy-world
+      fi
+      if [ -z "$2" ]; then
+        docker-compose up von-web node1 node2 node3 node4
+      else
+        if [[ $2 == *","* ]]; then
+          # If arg contains comma, then it should be multiple IPS
+          IPS=$2 docker-compose up von-web node1 node2 node3 node4
+        else
+          IP=$2 docker-compose up von-web node1 node2 node3 node4
+        fi
+      fi
+    ;;
+  cli)
+      if [ -z "$2" ]; then
+        docker-compose run client
+      else
+        docker-compose run -e IP="$2" client
+      fi
+    ;;
+  stop)
+      docker-compose stop
+    ;;
+  build)
+      docker-compose build
+    ;;
+  rebuild)
+      docker-compose build --no-cache
+    ;;
+  rm)
+      docker-compose stop
+      docker rm -f von_node1_1 von_node2_1 von_node3_1 von_node4_1 von_von-web_1 || true
+      docker volume rm -f von_node1-data von_node2-data von_node3-data von_node4-data von_von-client-cli von_von-client-libindy von_von-web-indy
+    ;;
+  *)
+    echo $"Usage: $0 {start|cli|stop|build|rebuild}"
+esac
+
+( cd - ) > /dev/null

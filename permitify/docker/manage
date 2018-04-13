@@ -1,0 +1,171 @@
+#!/bin/bash
+export DOCKERHOST=${APPLICATION_URL-$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)}
+export MSYS_NO_PATHCONV=1
+set -e
+
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )"
+
+# =================================================================================================================
+# Usage:
+# -----------------------------------------------------------------------------------------------------------------
+usage () {
+  cat <<-EOF
+
+  Usage: $0 {start|stop|build|rebuild|shell}
+
+  Options:
+
+  build - Build the docker images for the project.
+          You need to do this first.
+
+  start - Creates the application containers from the built images
+          and starts the services based on the docker-compose.yml file.
+
+          To start the services and connect them to a specific TOB API instance,
+          inject the url for the API using the tob-url flag.
+
+          Examples:
+          $0 start seed=my_seed
+          $0 start seed=my_seed THE_ORG_BOOK_API_URL=http://docker.for.win.localhost:56325/api/v1
+          $0 start person seed=my_seed
+          $0 start person seed=my_seed THE_ORG_BOOK_API_URL=http://docker.for.win.localhost:56325/api/v1
+
+  stop - Stops the services.  This is a non-destructive process.  The containers
+         are not deleted so they will be reused the next time you run start.
+
+  rebuild - Rebuild the docker images.
+EOF
+exit 1
+}
+# -----------------------------------------------------------------------------------------------------------------
+# Default Settings:
+# -----------------------------------------------------------------------------------------------------------------
+ALL_CONTAINERS="\
+    person\
+    faber_college\
+    acme_corp_apply\
+    acme_corp\
+    thrift_bank\
+"
+DEFAULT_CONTAINERS="person"
+# -----------------------------------------------------------------------------------------------------------------
+# Functions:
+# -----------------------------------------------------------------------------------------------------------------
+configureEnvironment () {
+  for arg in $@; do
+    case "$arg" in
+      *=*)
+        export ${arg}
+        ;;
+    esac
+  done
+
+  export APPLICATION_URL=${APPLICATION_URL-http://localhost}
+  # export THE_ORG_BOOK_API_URL=${THE_ORG_BOOK_API_URL-https://django-devex-von-dev.pathfinder.gov.bc.ca/api/v1}
+  # export THE_ORG_BOOK_APP_URL=${THE_ORG_BOOK_APP_URL-https://devex-von-dev.pathfinder.gov.bc.ca}
+  export THE_ORG_BOOK_API_URL="http://$DOCKERHOST:8081/api/v1"
+  export THE_ORG_BOOK_APP_URL="http://$DOCKERHOST:8080"
+  export TOB_INDY_SEED=the_org_book_issuer_000000000000
+  export LEDGER_URL=http://von-web:8000
+}
+
+getStartupParams() {
+  CONTAINERS=""
+  ARGS=""
+
+  for arg in $@; do
+    case "$arg" in
+      *=*)
+        # Skip it
+        ;;
+      all)
+        CONTAINERS+=" $ALL_CONTAINERS";;
+     -*)
+        ARGS+=" $arg";;
+      *)
+        CONTAINERS+=" $arg";;
+    esac
+  done
+
+  if [ -z "$CONTAINERS" ]; then
+    CONTAINERS="$DEFAULT_CONTAINERS"
+  fi
+
+  echo ${ARGS} ${CONTAINERS}
+}
+
+build() {
+    echo -e "\nBuilding libindy image ..."
+    docker build \
+        -t 'libindy' \
+        -f 'libindy/Dockerfile' \
+        .
+
+    echo -e "\nBuilding python-libindy image ..."
+    docker build \
+        -t 'python-libindy' \
+        -f 'python-libindy/Dockerfile' \
+        .
+
+    echo -e "\nBuilding permitify image ..."
+    docker build \
+        -t 'permitify' \
+        -f 'permitify/Dockerfile' \
+        ..
+}
+
+rebuild() {
+    echo -e "\nRebuilding libindy image ..."
+    docker build \
+        --no-cache \
+        -t 'libindy' \
+        -f 'libindy/Dockerfile' \
+        .
+
+    echo -e "\nRebuilding python-libindy image ..."
+    docker build \
+        --no-cache \
+        -t 'python-libindy' \
+        -f 'python-libindy/Dockerfile' \
+        .
+
+    echo -e "\nRebuilding permitify image ..."
+    docker build \
+        --no-cache \
+        -t 'permitify' \
+        -f 'permitify/Dockerfile' \
+        ..
+}
+# =================================================================================================================
+
+pushd ${SCRIPT_HOME} >/dev/null
+
+case "$1" in
+  start)
+      shift
+      _startupParams=$(getStartupParams $@)
+      configureEnvironment $@
+      docker-compose up ${_startupParams}
+    ;;
+  stop)
+      docker-compose stop
+    ;;
+  build)
+      build
+    ;;
+  rebuild)
+      rebuild
+    ;;
+  shell)
+      docker-compose run web bash
+    ;;
+  rm)
+      configureEnvironment
+      docker-compose rm -f
+      docker volume rm -f docker_person_wallet docker_acme_corp_apply_wallet docker_acme_corp_wallet docker_faber_college_wallet docker_thrift_bank_wallet
+    ;;
+  *)
+      usage;;
+esac
+
+popd >/dev/null

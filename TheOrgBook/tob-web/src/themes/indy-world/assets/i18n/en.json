@@ -1,0 +1,87 @@
+{
+  "app": {
+    "breadcrumb": "Home",
+    "title": "Indy World Demo",
+    "header": {
+      "title": "Indy World",
+      "logo-alt-text": "Indy World Logo"
+    },
+    "footer": {
+      "disclaimer": "Disclaimer",
+      "privacy": "Privacy",
+      "accessibility": "Accessibility",
+      "copyright": "Copyright",
+      "contact": "Contact Us"
+    }
+  },
+  "cert": {
+    "breadcrumb": "Credential",
+    "effective-date": "Effective Date",
+    "expiry-date": "Expiry Date",
+    "inactive-message": "This credential is inactive:",
+    "issuer": "Issuer",
+    "issuer-website": "Issuer Website",
+    "related-certs": "Related Credentials",
+    "requesting-proof": "Requesting proof of credential ...",
+    "return-link": "Back to Permit and Licence Info",
+    "verify-button-label": "Verify Credential",
+    "whats-this-link": "What's this?",
+    "verify-status": "Verification Status:"
+  },
+  "dashboard": {
+    "breadcrumb": "Search",
+    "title": "Welcome to Indy World's Verifiable Claims Demo",
+    "title-orgs": "persons registered",
+    "title-certs": "certificates"
+  },
+  "general": {
+    "none": "None",
+    "map-link": "Show on map",
+    "next-link": "Next",
+    "prev-link": "Previous",
+    "verified": "Verified"
+  },
+  "issuer": {
+    "breadcrumb": "Issuer Service",
+    "cert-types": "Credentials",
+    "effective-date": "Effective Date",
+    "expiry-date": "Expiry Date",
+    "website": "Issuer Website"
+  },
+  "not-found": {
+    "breadcrumb": "Not Found",
+    "title": "Page not found",
+    "error": "This page could not be located. Please check the URL or follow the link below.",
+    "return-link-title": "Return to the home page"
+  },
+  "org": {
+    "breadcrumb": "Person Info",
+    "certs-title": "Credentials",
+    "dba": "Doing Business As",
+    "effective-date": "Effective Date",
+    "identifier": "Person Identifier",
+    "location": "Address",
+    "locations": "Address",
+    "return-link": "Back to Person Info",
+    "type": "Organization Type"
+  },
+  "recipe": {
+    "breadcrumb": "Indy World",
+    "cert-depends-on": "Depends on",
+    "cert-view-link": "View Credential",
+    "cert-not-found": "Credential not found",
+    "find-org-title": "Find a person",
+    "org-view-link": "View record of person",
+    "register-link": "Register Person",
+    "title": "Indy World",
+    "return-link": "Back"
+  },
+  "search": {
+    "by-name": "Search by Name",
+    "by-location": "Search by Location",
+    "no-results": "No results",
+    "placeholder": "search",
+    "results-title": "Search Results",
+    "return-link": "Back to Search"
+  }
+}

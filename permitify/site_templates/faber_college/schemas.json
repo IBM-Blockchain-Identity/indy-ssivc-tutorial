@@ -1,0 +1,16 @@
+[
+  {
+    "name": "transcript.faber_college",
+    "version": "0.0.1",
+    "attr_names": [
+      "legal_entity_id",
+      "effective_date",
+      "student_first_name",
+      "student_last_name",
+      "ssn",
+      "degree",
+      "year",
+      "status"
+    ]
+  }
+]

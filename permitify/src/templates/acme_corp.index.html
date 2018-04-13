@@ -1,0 +1,74 @@
+{% extends "bcgov.index.html" %}
+{% load static %}
+
+{% block extrahead %}
+<link rel="shortcut icon" href="{% static "img/acme_favicon.png" %}">
+<link rel="stylesheet" href="{% static "css/acme.css" %}">
+{% endblock %}
+
+{% block header %}
+<div class="jumbotron jumbotron-fluid acme-banner" ></div>
+{% endblock %}
+
+{% block content %}
+<main class="container acme-main">
+  <div class="row">
+    <div class="col-sm-10 col-sm-push-1">
+      {% for form in forms %}
+      {% include "bootstrap.form.html" %}
+      {% endfor %}
+    </div>
+  </div>
+  {% if not foundational %}
+  <div class="row">
+    <hr class="page-separator">
+  </div>
+  {% if proof_response.success == True %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-2">
+        <h3 class="card-header">Cryptographically verified:</h3>
+        <div class="card-body">
+          <pre>{{ proof_response.verified }}</pre>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card mb-2">
+        <h3 class="card-header">Available credential data:</h3>
+        <div class="card-body">
+          <pre>{{ proof_response.parsed_proof | jsonify }}</pre>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card mb-2">
+        <h3 class="card-header">Received proof:</h3>
+        <div class="card-body">
+          <pre>{{ proof_response.proof | jsonify }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="row">
+    <div class="alert alert-danger show cannot-proceed-alert mt-2">
+      <div class="row">
+        <div class="col-1 text-center">
+          <i class="fas fa-minus-circle fa-3x error-icon mt-1"></i>
+        </div>
+        <div class="col">
+          <h3>
+            Unable to proceed based on the information available about this Legal Entity. Proof of the prerequisite permits/licenses must be available to continue this process.
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endif %}
+</main>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

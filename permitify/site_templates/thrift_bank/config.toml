@@ -1,0 +1,110 @@
+# Agent info
+template_root = "thrift_bank.index.html"
+name = "Thrift Bank"
+abbreviation = "thrift"
+jurisdiction_name = "United States"
+jurisdiction_abbreviation = "US"
+
+# Webpage info
+title = "Thrift Bank"
+description = "A bank that will happily give you a loan if you can prove your ability to repay it."
+explanation = "Use the form below to apply for a loan."
+
+# Forms:
+# 
+# These structures are used to build the forms
+# in the UI.
+
+[[forms]]
+name = "loan_application"
+title = "Loan Application"
+
+  [[forms.hidden]]
+  name = "schema"
+  value = "loan_application.thrift_bank"
+
+  [[forms.inputs]]
+  type = "hidden"
+  #required = true
+  name = "legal_entity_id"
+  #pretty = "legal_entity_id"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "first_name"
+  pretty = "First Name"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "last_name"
+  pretty = "Last Name"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "employee_status"
+  pretty = "Employee Status"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "experience"
+  pretty = "Experience"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "salary_bracket"
+  pretty = "Salary Bracket"
+
+# Schema mappers:
+# 
+# One for each schema type.
+# 
+# Each mapper is invoked when a request is received
+# which contains value "schema" which maps to "for"
+# property.
+
+# ***** TODO *****
+
+[[schema_mappers]]
+for = "loan_application.thrift_bank"
+
+
+  [[schema_mappers.attributes]]
+  name = "legal_entity_id"
+  from ="request"
+  source = "legal_entity_id"
+
+  [[schema_mappers.attributes]]
+  name = "effective_date"
+  from ="helper"
+  source = "now"
+
+  [[schema_mappers.attributes]]
+  name = "first_name"
+  from ="request"
+  source = "first_name"
+
+  [[schema_mappers.attributes]]
+  name = "last_name"
+  from ="request"
+  source = "last_name"
+
+
+  [[schema_mappers.attributes]]
+  name = "employee_status"
+  from ="request"
+  source = "employee_status"
+
+  [[schema_mappers.attributes]]
+  name = "experience"
+  from ="request"
+  source = "experience"
+
+  [[schema_mappers.attributes]]
+  name = "experience"
+  from ="request"
+  source = "experience"

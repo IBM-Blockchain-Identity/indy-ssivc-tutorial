@@ -1,0 +1,24 @@
+#=========================================================
+# OpenShift template parameters for:
+# Component: .
+# JSON Template File: templates/permitify/bc-registries-deploy.json
+#=========================================================
+# NAME=bc-registries
+# SOURCE_IMAGE_NAME=permitify
+# IMAGE_NAMESPACE=devex-von-permitify-tools
+# MEMORY_LIMIT=512Mi
+APPLICATION_DOMAIN=bc-registries-devex-von-permitify-test.pathfinder.gov.bc.ca
+# APP_CONFIG=
+# #DJANGO_SECRET_KEY=[\w]{50}
+# DJANGO_DEBUG=False
+TAG_NAME=test
+# PERSISTENT_VOLUME_SIZE=1Gi
+# MOUNT_PATH=/app/.indy_client/wallet
+# TEMPLATE_NAME=bc_registries
+# APPLICATION_IP=0.0.0.0
+# APPLICATION_PORT=8080
+THE_ORG_BOOK_API_URL=https://django-devex-von-test.pathfinder.gov.bc.ca/api/v1
+THE_ORG_BOOK_APP_URL=https://devex-von-test.pathfinder.gov.bc.ca
+APPLICATION_URL=https://bc-registries-devex-von-permitify-test.pathfinder.gov.bc.ca
+INDY_WALLET_SEED=bc_registries_test_0000000000000
+TOB_INDY_SEED=the_org_book_test_000000000000000

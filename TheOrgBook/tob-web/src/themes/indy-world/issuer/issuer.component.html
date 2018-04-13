@@ -1,0 +1,57 @@
+<section id="issuer">
+  <div class="row" *ngIf="error">
+    <div class="col-sm-12">
+      {{error}}
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!loaded && !error">
+    <div class="col-sm-12 page-load">
+      <div class="loading-indicator"></div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="loaded">
+    <div class="col-md-8 col-sm-7">
+      <h1>{{record.name}}</h1>
+      <hr>
+
+      <dl class="row">
+        <dt class="col-sm-4" *ngIf="record.issuerOrgURL" translate>issuer.website</dt>
+        <dd class="col-sm-8" *ngIf="record.issuerOrgURL">
+          <a [href]="record.issuerOrgURL" rel="external">
+            {{record.issuerOrgURL}}</a>
+          <small><span class="fas fa-external-link-alt"></span></small>
+        </dd>
+
+        <dt class="col-sm-4" translate>issuer.effective-date</dt>
+        <dd class="col-sm-8">
+          {{record.effectiveDate}}
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row" *ngIf="loaded">
+    <div class="col-sm-12">
+      <div class="card">
+        <h3 class="card-header" translate>issuer.cert-types</h3>
+        <div class="card-body">
+          <dl class="row" *ngFor="let type of claimTypes">
+            <dt class="col-sm-3">{{type.claimType}}</dt>
+            <dd class="col-sm-9">
+              <a [href]="type.issuerURL" rel="external">
+                {{type.issuerURL}}</a>
+              <small><span class="fas fa-external-link-alt"></span></small>
+            </dd>
+          </dl>
+          <div *ngIf="!claimTypes.length">
+            <em class="text-muted" translate>general.none</em>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

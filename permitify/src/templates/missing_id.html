@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+
+  <title>Missing ID</title>
+  {% for include in js_includes %}
+      <script src="{% static include.src %}"></script>
+  {% endfor %}
+
+  <!-- Image and text -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+</head>
+<body>
+  <nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+    <img src="/static/img/indy-logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+    Indy World
+    </a>
+  </nav>
+
+
+  <main class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card mt-3">
+          <h2 class="card-header">
+            The Legal Entity ID {{ legal_entity_id }}
+            does not exist.
+          </h2>
+          <div class="card-body">
+            <p>Please provide a valid Legal Entity ID.</p>
+            <form action="/" method="get" accept-charset="utf-8" name="" class="form well">
+              <fieldset>
+                <legend>Legal Entity ID</legend>
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <label class="control-label required" for="one-input"><span class="field-name">Legal Entity ID</span> <span class="required">(required)</span></label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="org_id"
+                        id="legal_entity_id-input"
+                        required>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><span class="fa fa-check"></span> Submit</button>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    </main>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
+

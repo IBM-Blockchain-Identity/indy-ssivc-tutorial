@@ -1,0 +1,26 @@
+{% extends "bcgov.index.html" %}
+{% load static %}
+
+{% block extrahead %}
+	<link rel="stylesheet" href="{% static "css/neutral.css" %}">
+	<link rel="stylesheet" href="{% static "css/worksafe.css" %}">
+{% endblock %}
+
+{% block header %}
+    <header class="worksafe">
+      <div class="header-row">
+        <div class="container">
+        <a href="https://www.worksafebc.com/" tabindex="-1">
+          <img class="header-logo"
+             tabindex="-1" alt="WorkSafe BC"
+             src="{% static "img/worksafebc-logo.jpg" %}">
+        </a>
+        </div>
+      </div>
+      <div class="header-bottom">
+      </div>
+    </header>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

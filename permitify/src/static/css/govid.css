@@ -1,0 +1,63 @@
+.govid-banner {
+  background-image: url("/static/img/govid-banner.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: #116fff;
+  min-height: 16rem;
+}
+
+legend {
+  font-size: 3rem;
+}
+
+pre {
+  max-height: 30rem;
+}
+
+.page-separator {
+  height: 2px;
+  background-color: black;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.cannot-proceed-alert {
+  color: black;
+  background-color: white;
+  border-color: red;
+  border-width: 4px;
+}
+
+.submit-button {
+  background-color: #d2d2d2;
+}
+
+.error-icon {
+  color: red;
+}
+
+@keyframes loading {
+  from {left: -100%; }
+  to { left: 100%; }
+}
+
+.btn.loading {
+  background-color: #ddd;
+  border-color: #bbb;
+  color: #666;
+  cursor: wait;
+  overflow: hidden;
+  position: relative;
+  text-shadow:0 2px 2px #fff;
+}
+.btn.loading::before {
+  animation: loading 1s linear infinite;
+  background: linear-gradient(to right, #ddd, #2980b9, #ddd);
+  bottom: 0;
+  content: "";
+  height: 2px;
+  left: -100%;
+  position: absolute;
+  width: 50%;
+}

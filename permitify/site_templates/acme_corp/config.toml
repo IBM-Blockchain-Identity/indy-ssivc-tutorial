@@ -1,0 +1,134 @@
+# Agent info
+template_root = "acme_corp.index.html"
+name = "Acme Corporation"
+abbreviation = "acme"
+jurisdiction_name = "United States"
+jurisdiction_abbreviation = "US"
+
+# Webpage info
+title = "Acme Corporation"
+description = "A company that hires anyone skilled enough to graduate from Faber College"
+explanation = "Use the form below to apply for a job."
+
+#[[js_includes]]
+#src = "js/acme_corp.js"
+
+# Forms:
+# 
+# These structures are used to build the forms
+# in the UI.
+
+[[forms]]
+name = "job_certificate"
+title = "Job Certificate"
+
+  [[forms.hidden]]
+  name = "schema"
+  value = "job_certificate.acme_corp"
+
+  [[forms.inputs]]
+  type = "hidden"
+  #required = true
+  name = "legal_entity_id"
+  #pretty = "legal_entity_id"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "first_name"
+  pretty = "First Name"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "last_name"
+  pretty = "Last Name"
+
+  [[forms.inputs]]
+  type = "select"
+  options = [
+    "",
+    "Full-time",
+    "Part-time",
+    "Intern",
+    "Retired"
+  ]
+  required = true
+  name = "employee_status"
+  pretty = "Employee Status"
+
+  [[forms.inputs]]
+  type = "select"
+  options = [
+    "",
+    "<1 yr",
+    "1-5 yrs",
+    "5-10 yrs",
+    "10-15 yrs",
+    "15-20 yrs",
+    "20+ yrs"
+  ]
+  required = true
+  name = "experience"
+  pretty = "Experience"
+
+  [[forms.inputs]]
+  type = "select"
+  options = [
+    "",
+    "<$25K",
+    "$25K-$50K",
+    "$50K-$75K",
+    "$75K-$100K",
+    "$100-$150K",
+    "$150-$200K",
+    "$200K+"
+  ]
+  required = true
+  name = "salary_bracket"
+  pretty = "Salary Bracket"
+
+
+[[schema_mappers]]
+for = "job_certificate.acme_corp"
+
+  [[schema_mappers.attributes]]
+  name = "legal_entity_id"
+  from ="request"
+  source = "legal_entity_id"
+
+  [[schema_mappers.attributes]]
+  name = "effective_date"
+  from ="helper"
+  source = "now"
+
+
+  [[schema_mappers.attributes]]
+  name = "first_name"
+  from ="request"
+  source = "first_name"
+
+  [[schema_mappers.attributes]]
+  name = "last_name"
+  from ="request"
+  source = "last_name"
+
+  [[schema_mappers.attributes]]
+  name = "employee_status"
+  from ="request"
+  source = "employee_status"
+
+  [[schema_mappers.attributes]]
+  name = "experience"
+  from ="request"
+  source = "experience"
+
+  [[schema_mappers.attributes]]
+  name = "salary_bracket"
+  from ="request"
+  source = "salary_bracket"
+
+
+
+
+

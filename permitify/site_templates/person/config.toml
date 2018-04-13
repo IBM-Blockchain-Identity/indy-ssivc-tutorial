@@ -1,0 +1,129 @@
+# Agent info
+template_root = "bcgov.index.html"
+temp_root_admin = "admin.index.html"
+name = "Gov ID"
+abbreviation = "GovID"
+jurisdiction_name = "United States"
+jurisdiction_abbreviation = "US"
+
+foundational = true
+
+# Webpage info
+title = "Gov ID"
+title_Admin = "Adminstrative Interface" 
+description = "Making Govornment ID simple."
+explanation = "Use the form below to create your Govornment ID"
+
+[[js_includes]]
+src = "js/person.js"
+
+# Forms:
+# 
+# These structures are used to build the forms
+# in the UI.
+
+[[forms]]
+name = "idenity"
+title = "Gov ID Request"
+
+  [[forms.hidden]]
+  name = "schema"
+  value = "entity.person"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "first_name"
+  pretty = "First Name"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "last_name"
+  pretty = "Last Name"
+
+  [[forms.inputs]]
+  type = "address"
+  required = true
+  name = "address"
+  pretty = "Mailing Address"
+
+# Schema mappers:
+# 
+# One for each schema type.
+# 
+# Each mapper is invoked when a request is received
+# which contains value "schema" which maps to "for"
+# property.
+
+[[schema_mappers]]
+for = "entity.person"
+  [[schema_mappers.attributes]]
+  name = "legal_entity_id"
+  from ="helper"
+  source = "uuid"
+
+  [[schema_mappers.attributes]]
+  name = "corp_num"
+  from ="previous"
+  source = "legal_entity_id"
+
+  [[schema_mappers.attributes]]
+  name = "first_name"
+  from ="request"
+  source = "first_name"
+
+  [[schema_mappers.attributes]]
+  name = "last_name"
+  from ="request"
+  source = "last_name"
+
+  [[schema_mappers.attributes]]
+  name = "org_type"
+  from ="literal"
+  source = "CO"
+
+#  [[schema_mappers.attributes]]
+#  name = "addressee"
+#  from ="request"
+#  source = "addressee"
+
+  [[schema_mappers.attributes]]
+  name = "address_line_1"
+  from ="request"
+  source = "address_line_1"
+
+  [[schema_mappers.attributes]]
+  name = "address_line_2"
+  from ="request"
+  source = "address_line_2"
+
+  [[schema_mappers.attributes]]
+  name = "city"
+  from ="request"
+  source = "city"
+
+  [[schema_mappers.attributes]]
+  name = "province"
+  from ="request"
+  source = "province"
+
+  [[schema_mappers.attributes]]
+  name = "postal_code"
+  from ="request"
+  source = "postal_code"
+
+  [[schema_mappers.attributes]]
+  name = "country"
+  from ="request"
+  source = "country"
+
+  [[schema_mappers.attributes]]
+  name = "effective_date"
+  from ="helper"
+  source = "now"
+
+  [[schema_mappers.attributes]]
+  name = "end_date"
+  from ="literal"
+  # source = null

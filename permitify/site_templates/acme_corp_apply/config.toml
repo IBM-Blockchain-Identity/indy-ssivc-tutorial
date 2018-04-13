@@ -1,0 +1,123 @@
+# Agent info
+template_root = "acme_corp.index.html"
+name = "Acme Corporation"
+abbreviation = "acme"
+jurisdiction_name = "United States"
+jurisdiction_abbreviation = "US"
+
+# Webpage info
+title = "Acme Corporation"
+description = "A company that hires anyone skilled enough to graduate from Faber College"
+explanation = "Use the form below to apply for a job."
+
+#[[js_includes]]
+#src = "js/acme_corp.js"
+
+# Forms:
+#
+# These structures are used to build the forms
+# in the UI.
+
+[[forms]]
+name = "job_application"
+title = "Job Application"
+
+  [[forms.hidden]]
+  name = "schema"
+  value = "job_application.acme_corp"
+
+  [[forms.inputs]]
+  type = "hidden"
+  #required = true
+  name = "legal_entity_id"
+  #pretty = "legal_entity_id"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "first_name"
+  pretty = "First Name"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "last_name"
+  pretty = "Last Name"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "phone_number"
+  pretty = "Phone Number"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "degree"
+  pretty = "Degree"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "status"
+  pretty = "Status"
+
+  [[forms.inputs]]
+  type = "text"
+  required = true
+  name = "ssn"
+  pretty = "SSN"
+
+# Schema mappers:
+#
+# One for each schema type.
+#
+# Each mapper is invoked when a request is received
+# which contains value "schema" which maps to "for"
+# property.
+
+
+[[schema_mappers]]
+for = "job_application.acme_corp"
+
+
+  [[schema_mappers.attributes]]
+  name = "legal_entity_id"
+  from ="request"
+  source = "legal_entity_id"
+
+  [[schema_mappers.attributes]]
+  name = "effective_date"
+  from ="helper"
+  source = "now"
+
+  [[schema_mappers.attributes]]
+  name = "first_name"
+  from ="request"
+  source = "first_name"
+
+  [[schema_mappers.attributes]]
+  name = "last_name"
+  from ="request"
+  source = "last_name"
+
+  [[schema_mappers.attributes]]
+  name = "phone_number"
+  from ="request"
+  source = "phone_number"
+
+  [[schema_mappers.attributes]]
+  name = "degree"
+  from ="request"
+  source = "degree"
+
+  [[schema_mappers.attributes]]
+  name = "status"
+  from ="request"
+  source = "status"
+
+  [[schema_mappers.attributes]]
+  name = "ssn"
+  from ="request"
+  source = "ssn"
+

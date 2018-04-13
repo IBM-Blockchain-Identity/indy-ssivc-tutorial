@@ -1,0 +1,18 @@
+<app-header></app-header>
+
+<main class="container">
+
+  <div class="row mrgn-tp-lg" *ngIf="!inited">
+    <div class="col-sm-12 page-load">
+      <div class="loading-indicator"></div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="inited">
+
+    <router-outlet></router-outlet>
+
+  </ng-container>
+</main>
+
+<app-footer></app-footer>

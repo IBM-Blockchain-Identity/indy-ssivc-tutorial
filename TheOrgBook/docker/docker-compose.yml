@@ -1,0 +1,133 @@
+version: '3'
+services:
+  #
+  # tob-web
+  #
+  tob-web:
+    image: angular-on-nginx
+    environment:
+      - API_URL=${API_URL}
+      - IpFilterRules=${IpFilterRules}
+      - RealIpFrom=${RealIpFrom}
+      - TOB_THEME=${TOB_THEME}
+      - WEB_BASE_HREF=${WEB_BASE_HREF}
+    networks:
+      - indy-world
+    ports:
+      - "${WEB_HTTP_PORT}:8080"
+    depends_on:
+      - tob-api
+    # command: npm start
+
+  #
+  # tob-api
+  #-------------------------------------------------
+  # The API performs the migrations on the database
+  # and updates the indexes in Solr.  Therefore
+  # it needs to come up after the database and
+  # and Solr services have had time to fully
+  # initialize.
+  #
+  #
+  # We are using a simple sleep command to do this
+  # for the moment; refer to the `command` section
+  # of the configuration for details.  It would be
+  # nice to implement a more deterministic solution.
+  #
+  tob-api:
+    image: django
+    environment:
+      - DATABASE_SERVICE_NAME=${DATABASE_SERVICE_NAME}
+      - DATABASE_ENGINE=${DATABASE_ENGINE}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - SOLR_SERVICE_NAME=${SOLR_SERVICE_NAME}
+      - SOLR_CORE_NAME=${SOLR_CORE_NAME}
+      - TOB_DB_SERVICE_HOST=${DATABASE_SERVICE_NAME}
+      - TOB_DB_SERVICE_PORT=5432
+      - TOB_SOLR_SERVICE_HOST=${SOLR_SERVICE_NAME}
+      - TOB_SOLR_SERVICE_PORT=8983
+      - INDY_WALLET_SEED=${INDY_WALLET_SEED}
+      - LEDGER_URL=${LEDGER_URL}
+      - GENESIS_URL=${GENESIS_URL}
+    volumes:
+      - ../tob-api/api:/opt/app-root/src/api
+    networks:
+      - indy-world
+    ports:
+      - "${API_HTTP_PORT}:8080"
+    depends_on:
+      - tob-db
+      - tob-solr
+    command: >
+      /bin/bash -c "
+        ./ibm-prereg.sh"
+  #
+  # schema-spy
+  #-------------------------------------------------
+  # Needs to wait for the schema to be created/migrated
+  # by the API server; it's not enough to wait for the
+  # database to be available.
+  #
+  # We are using a simple sleep command to do this
+  # for the moment; refer to the `command` section
+  # of the configuration for details.  It would be
+  # nice to implement a more deterministic solution.
+  #
+  schema-spy:
+    image: schema-spy
+    environment:
+      - DATABASE_SERVICE_NAME=${DATABASE_SERVICE_NAME}
+      - POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE}
+      - POSTGRESQL_USER=${POSTGRESQL_USER}
+      - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
+    networks:
+      - indy-world
+    ports:
+      - 8082:8080
+    depends_on:
+      - tob-db
+    command: >
+      /bin/bash -c "
+        echo sleeping ...;
+        sleep 20;
+        exec npm start;"
+
+  #
+  # tob-solr
+  #
+  tob-solr:
+    image: solr
+    environment:
+      - CORE_NAME=${CORE_NAME}
+    networks:
+      - indy-world
+    ports:
+      - 8983:8983
+
+  #
+  # tob-db
+  #
+  tob-db:
+    image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:155cf81a3d3a8bbcab3a1f61b177cab75a4105306146d172ef8fb29488cf58b4
+    environment:
+      - POSTGRESQL_USER=${POSTGRESQL_USER}
+      - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
+      - POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE}
+    networks:
+      - indy-world
+    ports:
+      - 5432:5432
+    # volumes:
+      # - tob-data:/var/lib/pgsql/data
+
+networks:
+  indy-world:
+    external:
+      name: indy-world
+
+# volumes:
+  # tob-data:

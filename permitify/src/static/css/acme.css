@@ -1,0 +1,80 @@
+.acme-banner {
+  background-image: url("/static/img/acme_banner@2x.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: #041b75;
+  min-height: 16rem;
+}
+
+.acme-main {
+  background-color: #edf4ff;
+  border-radius: 2rem;
+  padding-top: 3rem;
+  padding-left: 4rem;
+  padding-right: 4rem;
+  background-image: url("/static/img/acme_large.png");
+  background-repeat: no-repeat;
+  background-position: 95% 40px;
+  background-size: 123px 123px;
+}
+
+legend {
+  font-size: 3rem;
+}
+
+pre {
+  max-height: 30rem;
+}
+
+.submit-button {
+  border-radius: 0rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  color: #fff;
+  background-color: #041b75;
+  border-color: #041b75;
+}
+
+.page-separator {
+  height: 2px;
+  background-color: #f15a24;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.cannot-proceed-alert {
+  color: black;
+  background-color: white;
+  border-color: red;
+  border-width: 4px;
+}
+
+.error-icon {
+  color: red;
+}
+
+@keyframes loading {
+  from {left: -100%; }
+  to { left: 100%; }
+}
+
+.btn.loading {
+  background-color: #ddd;
+  border-color: #bbb;
+  color: #666;
+  cursor: wait;
+  overflow: hidden;
+  position: relative;
+  text-shadow:0 2px 2px #fff;
+}
+.btn.loading::before {
+  animation: loading 1s linear infinite;
+  background: linear-gradient(to right, #ddd, #2980b9, #ddd);
+  bottom: 0;
+  content: "";
+  height: 2px;
+  left: -100%;
+  position: absolute;
+  width: 50%;
+}
