@@ -115,6 +115,13 @@ class ProofRequestProcesser(object):
 
         # If any of the claims for proof are empty, we cannot construct a proof
         for attr in claims['attrs']:
+            if 'legal_entity_id' in self.__filters:
+                my_claims = []
+                for claim in claims['attrs'][attr]:
+                    if 'legal_entity_id' in claim['attrs'] and claim['attrs']['legal_entity_id'] == self.__filters['legal_entity_id']:
+                        my_claims.append(claim)
+                        break
+                claims['attrs'][attr] = my_claims
             if not claims['attrs'][attr]:
                 raise NotAcceptable('No claims found for attr %s' % attr)
 
@@ -125,6 +132,10 @@ class ProofRequestProcesser(object):
             raise NotAcceptable(
                 'No claims found for filter %s = %s' % (
                     key, value))
+
+        self.__logger.debug(
+            'Filtering for claims  returned the following claims for proof request: %s' %
+            json.dumps(claims))
 
         # TODO: rework to support other filters other than legal_entity_id
         requested_claims = {

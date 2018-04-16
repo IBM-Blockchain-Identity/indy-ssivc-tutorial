@@ -4,7 +4,7 @@
     TheOrgBook is a repository for Verifiable Claims made about Organizations related to a known foundational Verifiable Claim. See https://github.com/bcgov/VON
 
     OpenAPI spec version: v1
-        
+
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -31,19 +31,21 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from api.models.VerifiableClaim import VerifiableClaim
 
+import pickle
+
 # ToDo:
 # * Refactor the saving process to use serializers, etc.
 # ** Make it work with generics.GenericAPIView
-# ** Using APIView for the moment so a serializer_class does not need to be defined; 
+# ** Using APIView for the moment so a serializer_class does not need to be defined;
 #    as we manually processing things for the moment.
 class bcovrinGenerateClaimRequest(APIView):
-  """  
+  """
   Generate a claim request from a given claim definition.
   """
-  permission_classes = (permissions.AllowAny,)  
-  
+  permission_classes = (permissions.AllowAny,)
+
   def post(self, request, *args, **kwargs):
-    """  
+    """
     Processes a claim definition and responds with a claim request which
     can then be used to submit a claim.
 
@@ -66,16 +68,16 @@ class bcovrinGenerateClaimRequest(APIView):
 # ToDo:
 # * Refactor the saving process to use serializers, etc.
 # ** Make it work with generics.GenericAPIView
-# ** Using APIView for the moment so a serializer_class does not need to be defined; 
+# ** Using APIView for the moment so a serializer_class does not need to be defined;
 #    as we manually processing things for the moment.
 class bcovrinStoreClaim(APIView):
-  """  
+  """
   Store a verifiable claim.
   """
-  permission_classes = (permissions.AllowAny,)  
-  
+  permission_classes = (permissions.AllowAny,)
+
   def post(self, request, *args, **kwargs):
-    """  
+    """
     Stores a verifiable claim into a central wallet.
 
     The data in the claim is parsed and stored in the database
@@ -100,13 +102,13 @@ class bcovrinStoreClaim(APIView):
     return Response(serializer.data)
 
 class bcovrinConstructProof(APIView):
-  """  
+  """
   Generates a proof based on a set of filters.
   """
-  permission_classes = (permissions.AllowAny,)  
- 
+  permission_classes = (permissions.AllowAny,)
+
   def post(self, request, *args, **kwargs):
-    """  
+    """
     Generates a proof from a proof request and set of filters.
 
     Example request payload:
@@ -147,7 +149,7 @@ class bcovrinConstructProof(APIView):
     return JsonResponse(proofResponse)
 
 class bcovrinVerifyCredential(APIView):
-  """  
+  """
   Verifies a verifiable claim
   """
   permission_classes = (permissions.AllowAny,)
@@ -174,10 +176,21 @@ class bcovrinVerifyCredential(APIView):
 
       proofRequest = proofRequestBuilder.asDict()
 
+      # Looks like credential data is stored as a stringified json in the claim object
+      claimJSON = json.loads(verifiableClaim.claimJSON)
+      legal_entity_id = ''
+      if claimJSON['values'] and claimJSON['values']['legal_entity_id']:
+        # values are stored as arrays of length 2 ex "'country': ['US', '5187646771']". element 0 is the plaintext value
+        legal_entity_id = claimJSON['values']['legal_entity_id'][0]
+
       proofRequestWithFilters = {
         'filters': {},
         'proof_request': proofRequest
       }
+      if (legal_entity_id):
+        proofRequestWithFilters['filters'] = {
+            'legal_entity_id': legal_entity_id
+        }
 
       proofRequestProcesser = ProofRequestProcesser(json.dumps(proofRequestWithFilters))
       proofResponse = proofRequestProcesser.ConstructProof()
