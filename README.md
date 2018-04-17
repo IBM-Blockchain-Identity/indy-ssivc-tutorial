@@ -69,6 +69,27 @@ The figure below shows the various components for the demo.
 
 ## Using Indy World
 
+### Dependencies
+
+**Docker** and **Docker Compose** are used to build and run the demo.  To see what versions are currently installed on your system, run:
+
+```
+$ docker --version
+$ docker-compose --version
+```
+
+Information on downloading and installing Docker for various platforms can be found [here](https://www.docker.com/get-docker).
+
+The **source-to-image** (s2i) tool is also required to build the docker images used in the demo. S2I can be downloaded [here](https://github.com/openshift/source-to-image).  If you are using a Mac and have Homebrew installed, the following command will install s2i:
+
+```
+$ brew install source-to-image
+```
+
+The website gives instructions for installing on other platforms.
+
+Verify that **s2i** is in your PATH.  If not, then edit your PATH and add the directory where **s2i** is installed.  The **manage.sh** scripts will look for the **s2i** executable on your PATH.  If it is not found you will get a message asking you to download and set it on your PATH.
+
 ### Installing
 
 This project includes three git repositories from BC-Gov (VON Network, TheOrgBook and Permitify) as described under the architecture section.
