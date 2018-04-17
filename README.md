@@ -331,11 +331,6 @@ The individual credentials can be viewed and verified if desired.
 
 ![list_alice](../../raw/master/docs/images/alice_all.png)
 
-
-## Known Issues
-
-- Creating more than 1 person fails.  You must stop and rm VON Network, TheOrgBook and Permitify before running again.
-
 ## Code Repos
 
 ### BC-Gov Code Repos
