@@ -85,6 +85,12 @@ def read_ledger(ledger, seq_no=0, seq_to=1000, node_name='node1', format="data")
     for line in lines:
         parsed = json.loads(line)
         if format == "pretty":
+          index = parsed[0]
+          transaction = parsed[1]
+          if 'type' in transaction and transaction['type'] in indy_txn_types:
+            transaction['type'] = indy_txn_types[transaction['type']]
+          if 'role' in transaction and transaction['role'] in indy_role_types:
+            transaction['role'] = indy_role_types[transaction['role']]
           resp.append(json.dumps(parsed, indent=4, sort_keys=True))
         else:
           resp.append(parsed)
