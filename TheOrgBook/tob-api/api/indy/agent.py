@@ -1,4 +1,5 @@
 import os
+import threading
 
 from von_agent.nodepool import NodePool
 from von_agent.wallet import Wallet
@@ -14,6 +15,7 @@ WALLET_SEED = os.environ.get('INDY_WALLET_SEED')
 if not WALLET_SEED or len(WALLET_SEED) is not 32:
     raise Exception('INDY_WALLET_SEED must be set and be 32 characters long.')
 
+lock = threading.Lock()
 
 class Issuer:
     def __init__(self):
@@ -32,6 +34,9 @@ class Issuer:
         )
 
     async def __aenter__(self):
+        logger.info('acquiring lock for Issuer')
+        lock.acquire()
+        logger.info('acquired lock for Issuer')
         await self.pool.open()
         return await self.instance.open()
 
@@ -41,6 +46,8 @@ class Issuer:
 
         await self.instance.close()
         await self.pool.close()
+        logger.info('Issuer releasing lock')
+        lock.release()
 
 
 class Verifier:
@@ -60,6 +67,9 @@ class Verifier:
         )
 
     async def __aenter__(self):
+        logger.info('acquiring lock for Verifier')
+        lock.acquire()
+        logger.info('acquired lock for Verifier')
         await self.pool.open()
         return await self.instance.open()
 
@@ -69,6 +79,8 @@ class Verifier:
 
         await self.instance.close()
         await self.pool.close()
+        logger.info('Verifier releasing lock')
+        lock.release()
 
 
 class Holder:
@@ -88,6 +100,9 @@ class Holder:
         )
 
     async def __aenter__(self):
+        logger.info('acquiring lock for Holder')
+        lock.acquire()
+        logger.info('acquired lock for Holder')
         await self.pool.open()
         instance = await self.instance.open()
         await self.instance.create_master_secret('secret')
@@ -99,3 +114,6 @@ class Holder:
 
         await self.instance.close()
         await self.pool.close()
+        logger.info('Holder releasing lock')
+        lock.release()
+
