@@ -34,6 +34,7 @@ RUN apt-get update -y && apt-get install -y \
     curl
 
 RUN pip3 install -U \
+    base58==0.2.5 \
     pip==9.0.1 \
     setuptools
 
