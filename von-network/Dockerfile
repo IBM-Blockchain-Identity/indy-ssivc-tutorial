@@ -34,7 +34,6 @@ RUN apt-get update -y && apt-get install -y \
     curl
 
 RUN pip3 install -U \
-    base58==0.2.5 \
     pip==9.0.1 \
     setuptools
 
@@ -71,7 +70,7 @@ USER root
 RUN mv target/debug/libindy.so /usr/lib
 
 RUN pip3 install --upgrade setuptools
-RUN pip3 install pipenv
+RUN pip3 install pipenv base58==0.2.5
 
 USER indy
 WORKDIR /home/indy
