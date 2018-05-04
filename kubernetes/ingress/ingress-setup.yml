@@ -1,0 +1,111 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ingress-setup
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ingress-setup
+        tier: backend
+    spec:
+      imagePullSecrets:
+        - name: bluemix-default-secret
+      containers:
+      - name: ingress-setup
+        image: registry.ng.bluemix.net/indyworld/ingress-setup
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 80
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-setup
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    name: ingress-setup
+  selector:
+    app: ingress-setup
+    tier: backend
+---
+# For proving you own the domain
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-setup-ingress
+spec:
+  rules:
+  - host: indyworld.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ingress-setup
+          servicePort: 80
+  - host: indyworld-von-web.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ingress-setup
+          servicePort: 80
+  - host: indyworld-api.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ingress-setup
+          servicePort: 80
+  - host: indyworld-schema-spy.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ingress-setup
+          servicePort: 80
+  - host: indyworld-person.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ingress-setup
+          servicePort: 80
+  - host: indyworld-faber.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ingress-setup
+          servicePort: 80
+  - host: indyworld-acme-corp.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ingress-setup
+          servicePort: 80
+  - host: indyworld-acme-corp-apply.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ingress-setup
+          servicePort: 80
+  - host: indyworld-thrift.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ingress-setup
+          servicePort: 80

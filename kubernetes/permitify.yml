@@ -1,0 +1,315 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: person
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: person
+        tier: backend
+    spec:
+      imagePullSecrets:
+        - name: bluemix-default-secret
+      containers:
+      - name: person
+        image: registry.ng.bluemix.net/indyworld/permitify
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: PYTHON_ENV
+          value: development
+        - name: APPLICATION_IP
+          value: 0.0.0.0
+        - name: APPLICATION_PORT
+          value: "8080"
+        - name: THE_ORG_BOOK_API_URL
+          value: http://tob-api:8080/api/v1
+        - name: THE_ORG_BOOK_APP_URL
+          value: https://indyworld.vcreds.org
+        - name: TEMPLATE_NAME
+          value: person
+        - name: INDY_WALLET_SEED
+          value: bc_registries_000000000000000000
+        - name: GENESIS_URL
+          value: http://von-web:8000/genesis
+        - name: TOB_INDY_SEED
+          value: the_org_book_issuer_000000000000
+        - name: DISCONNECTED
+          value: "false"
+        - name: LEDGER_URL
+          value: http://von-web:8000
+        - name: APPLICATION_URL
+          value: https://indyworld-person.vcreds.org
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: person
+spec:
+  ports:
+  - protocol: TCP
+    port: 8080
+  selector:
+    app: person
+    tier: backend
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: faber-college
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: faber-college
+        tier: backend
+    spec:
+      imagePullSecrets:
+        - name: bluemix-default-secret
+      containers:
+      - name: dmv
+        image: registry.ng.bluemix.net/indyworld/permitify
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: PYTHON_ENV
+          value: development
+        - name: APPLICATION_IP
+          value: 0.0.0.0
+        - name: APPLICATION_PORT
+          value: "8080"
+        - name: THE_ORG_BOOK_API_URL
+          value: http://tob-api:8080/api/v1
+        - name: THE_ORG_BOOK_APP_URL
+          value: https://indyworld.vcreds.org
+        - name: TEMPLATE_NAME
+          value: faber_college
+        - name: INDY_WALLET_SEED
+          value: faber000000000000000000000000000
+        - name: GENESIS_URL
+          value: http://von-web:8000/genesis
+        - name: TOB_INDY_SEED
+          value: the_org_book_issuer_000000000000
+        - name: DISCONNECTED
+          value: "false"
+        - name: LEDGER_URL
+          value: http://von-web:8000
+        - name: APPLICATION_URL
+          value: https://indyworld-faber.vcreds.org
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: faber
+spec:
+  ports:
+  - protocol: TCP
+    port: 8080
+  selector:
+    app: faber-college
+    tier: backend
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: acme-corp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: acme-corp
+        tier: backend
+    spec:
+      imagePullSecrets:
+        - name: bluemix-default-secret
+      containers:
+      - name: thrift-bank
+        image: registry.ng.bluemix.net/indyworld/permitify
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: PYTHON_ENV
+          value: development
+        - name: APPLICATION_IP
+          value: 0.0.0.0
+        - name: APPLICATION_PORT
+          value: "8080"
+        - name: THE_ORG_BOOK_API_URL
+          value: http://tob-api:8080/api/v1
+        - name: THE_ORG_BOOK_APP_URL
+          value: https://indyworld.vcreds.org
+        - name: TEMPLATE_NAME
+          value: acme_corp
+        - name: INDY_WALLET_SEED
+          value: acme_corp00000000000000000000000
+        - name: GENESIS_URL
+          value: http://von-web:8000/genesis
+        - name: TOB_INDY_SEED
+          value: the_org_book_issuer_000000000000
+        - name: DISCONNECTED
+          value: "false"
+        - name: LEDGER_URL
+          value: http://von-web:8000
+        - name: APPLICATION_URL
+          value: https://indyworld-acme-corp.vcreds.org
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-corp
+spec:
+  ports:
+  - protocol: TCP
+    port: 8080
+  selector:
+    app: acme-corp
+    tier: backend
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: acme-corp-apply
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: acme-corp-apply
+        tier: backend
+    spec:
+      imagePullSecrets:
+        - name: bluemix-default-secret
+      containers:
+      - name: thrift-bank
+        image: registry.ng.bluemix.net/indyworld/permitify
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: PYTHON_ENV
+          value: development
+        - name: APPLICATION_IP
+          value: 0.0.0.0
+        - name: APPLICATION_PORT
+          value: "8080"
+        - name: THE_ORG_BOOK_API_URL
+          value: http://tob-api:8080/api/v1
+        - name: THE_ORG_BOOK_APP_URL
+          value: https://indyworld.vcreds.org
+        - name: TEMPLATE_NAME
+          value: acme_corp_apply
+        - name: INDY_WALLET_SEED
+          value: acme_corp_apply00000000000000000
+        - name: GENESIS_URL
+          value: http://von-web:8000/genesis
+        - name: TOB_INDY_SEED
+          value: the_org_book_issuer_000000000000
+        - name: DISCONNECTED
+          value: "false"
+        - name: LEDGER_URL
+          value: http://von-web:8000
+        - name: APPLICATION_URL
+          value: https://indyworld-acme-corp-apply.vcreds.org
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-corp-apply
+spec:
+  ports:
+  - protocol: TCP
+    port: 8080
+  selector:
+    app: acme-corp-apply
+    tier: backend
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: thrift-bank
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: thrift-bank
+        tier: backend
+    spec:
+      imagePullSecrets:
+        - name: bluemix-default-secret
+      containers:
+      - name: thrift-bank
+        image: registry.ng.bluemix.net/indyworld/permitify
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: PYTHON_ENV
+          value: development
+        - name: APPLICATION_IP
+          value: 0.0.0.0
+        - name: APPLICATION_PORT
+          value: "8080"
+        - name: THE_ORG_BOOK_API_URL
+          value: http://tob-api:8080/api/v1
+        - name: THE_ORG_BOOK_APP_URL
+          value: https://indyworld.vcreds.org
+        - name: TEMPLATE_NAME
+          value: thrift_bank
+        - name: INDY_WALLET_SEED
+          value: thrift_bank000000000000000000000
+        - name: GENESIS_URL
+          value: http://von-web:8000/genesis
+        - name: TOB_INDY_SEED
+          value: the_org_book_issuer_000000000000
+        - name: DISCONNECTED
+          value: "false"
+        - name: LEDGER_URL
+          value: http://von-web:8000
+        - name: APPLICATION_URL
+          value: https://indyworld-thrift.vcreds.org
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thrift-bank
+spec:
+  ports:
+  - protocol: TCP
+    port: 8080
+  selector:
+    app: thrift-bank
+    tier: backend

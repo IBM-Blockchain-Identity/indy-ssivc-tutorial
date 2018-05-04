@@ -1,0 +1,247 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tob-db
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tob-db
+        tier: backend
+    spec:
+      containers:
+      - name: tob-db
+        image: registry.access.redhat.com/rhscl/postgresql-95-rhel7@sha256:155cf81a3d3a8bbcab3a1f61b177cab75a4105306146d172ef8fb29488cf58b4
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 5432
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: POSTGRESQL_DATABASE
+          value: "THE_ORG_BOOK"
+        - name: POSTGRESQL_USER
+          value: "DB_USER"
+        - name: POSTGRESQL_PASSWORD
+          value: "DB_PASSWORD"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tob-db
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: tob-db
+    tier: backend
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tob-solr
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tob-solr
+        tier: backend
+    spec:
+      imagePullSecrets:
+        - name: bluemix-default-secret
+      containers:
+      - name: tob-solr
+        image: registry.ng.bluemix.net/indyworld/solr
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8983
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: CORE_NAME
+          value: "the_org_book"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tob-solr
+spec:
+  ports:
+  - port: 8983
+  selector:
+    app: tob-solr
+    tier: backend
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tob-api
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tob-api
+        tier: middleware
+    spec:
+      imagePullSecrets:
+        - name: bluemix-default-secret
+      containers:
+      - name: tob-api
+        image: registry.ng.bluemix.net/indyworld/django
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080
+        command: ["./ibm-prereg.sh"]
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: DATABASE_SERVICE_NAME
+          value: "tob-db"
+        - name: DATABASE_ENGINE
+          value: "postgresql"
+        - name: DATABASE_NAME
+          value: "THE_ORG_BOOK"
+        - name: DATABASE_USER
+          value: "DB_USER"
+        - name: DATABASE_PASSWORD
+          value: "DB_PASSWORD"
+        - name: DJANGO_SECRET_KEY
+          value: "wpn1GZrouOryH2FshRrpVHcEhMfMLtmTWMC2K5Vhx8MAi74H5y"
+        - name: SOLR_SERVICE_NAME
+          value: "tob-solr"
+        - name: SOLR_CORE_NAME
+          value: "the_org_book"
+        - name: INDY_WALLET_SEED
+          value: the_org_book_issuer_000000000000
+        - name: LEDGER_URL
+          value: http://von-web:8000
+        - name: GENESIS_URL
+          value: http://von-web:8000/genesis
+        - name: ISSUER_WALLET_SEED
+          value: the_org_book_issuer_000000000000
+        - name: HOLDER_WALLET_SEED
+          value: the_org_book_holder_000000000000
+        - name: VERIFIER_WALLET_SEED
+          value: the_org_book_verifier_0000000000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tob-api
+spec:
+  ports:
+  - protocol: TCP
+    port: 8080
+    name: tob-api
+  selector:
+    app: tob-api
+    tier: middleware
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tob-web
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tob-web
+        tier: frontend
+    spec:
+      imagePullSecrets:
+        - name: bluemix-default-secret
+      containers:
+      - name: tob-web
+        image: registry.ng.bluemix.net/indyworld/angular-on-nginx
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: WEB_HTTP_PORT
+          value: "8080"
+        - name: API_URL
+          value: http://tob-api:8080/api/v1/
+        - name: IpFilterRules
+          value: "allow all;"
+        - name: RealIpFrom
+          value: "127.0.0.0/16"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tob-web
+spec:
+  ports:
+  - protocol: TCP
+    port: 8080
+    name: tob-web
+  selector:
+    app: tob-web
+    tier: frontend
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: schema-spy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: schema-spy
+        tier: middleware
+    spec:
+      imagePullSecrets:
+        - name: bluemix-default-secret
+      containers:
+      - name: schema-spy
+        image: registry.ng.bluemix.net/indyworld/schema-spy
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: DATABASE_SERVICE_NAME
+          value: "tob-db"
+        - name: POSTGRESQL_DATABASE
+          value: "THE_ORG_BOOK"
+        - name: POSTGRESQL_USER
+          value: "DB_USER"
+        - name: POSTGRESQL_PASSWORD
+          value: "DB_PASSWORD"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: schema-spy
+spec:
+  ports:
+  - protocol: TCP
+    port: 8080
+    name: schema-spy
+  selector:
+    app: schema-spy
+    tier: middleware

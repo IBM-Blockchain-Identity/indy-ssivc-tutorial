@@ -1,0 +1,83 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: indyworld-ingress
+  annotations:
+    ingress.bluemix.net/redirect-to-https: "True"
+spec:
+  tls:
+  - hosts:
+    - indyworld.vcreds.org
+    - indyworld-von-web.vcreds.org
+    - indyworld-api.vcreds.org
+    - indyworld-schema-spy.vcreds.org
+    - indyworld-person.vcreds.org
+    - indyworld-faber.vcreds.org
+    - indyworld-acme-corp.vcreds.org
+    - indyworld-acme-corp-apply.vcreds.org
+    - indyworld-thrift.vcreds.org
+    secretName: indyworld-vcreds-cert
+  rules:
+  - host: indyworld.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tob-web
+          servicePort: 8080
+  - host: indyworld-api.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tob-api
+          servicePort: 8080
+  - host: indyworld-von-web.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: von-web
+          servicePort: 8000
+  - host: indyworld-schema-spy.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: schema-spy
+          servicePort: 8080
+  - host: indyworld-person.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: person
+          servicePort: 8080
+  - host: indyworld-faber.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: faber
+          servicePort: 8080
+  - host: indyworld-acme-corp.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: acme-corp
+          servicePort: 8080
+  - host: indyworld-acme-corp-apply.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: acme-corp-apply
+          servicePort: 8080
+  - host: indyworld-thrift.vcreds.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: thrift-bank
+          servicePort: 8080

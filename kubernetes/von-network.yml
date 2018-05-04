@@ -1,0 +1,230 @@
+##
+# Client
+##
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: von-network
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: von-network
+    spec:
+      imagePullSecrets:
+        - name: bluemix-default-secret
+      volumes:
+      - name: node-1-volume
+        emptyDir: {}
+      - name: node-2-volume
+        emptyDir: {}
+      - name: node-3-volume
+        emptyDir: {}
+      - name: node-4-volume
+        emptyDir: {}
+      containers:
+      - name: von-client
+        command: ["bash", "-c",
+                "./scripts/start_client.sh ; sleep 30000"]
+        image: registry.ng.bluemix.net/indyworld/von-base
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8000
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: KUBERNETES
+          value: "1"
+      - name: von-web
+        command: ["bash", "-c",
+                "sleep 10000 & ./scripts/start_webserver.sh ; sleep 3000"]
+        image: registry.ng.bluemix.net/indyworld/von-base
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8000
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: KUBERNETES
+          value: "1"
+        volumeMounts:
+        - name: node-1-volume
+          mountPath: /home/indy/.mnt/node1
+        - name: node-2-volume
+          mountPath: /home/indy/.mnt/node2
+        - name: node-3-volume
+          mountPath: /home/indy/.mnt/node3
+        - name: node-4-volume
+          mountPath: /home/indy/.mnt/node4
+      - name: node-1
+        image: registry.ng.bluemix.net/indyworld/von-base
+        command: ["bash", "-c",
+                  "./scripts/start_node.sh; sleep 3000"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 9701
+        - containerPort: 9702
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: NODEPORT
+          value: "9701"
+        - name: APIPORT
+          value: "9702"
+        - name: NODENUM
+          value: "1"
+        - name: KUBERNETES
+          value: "1"
+        volumeMounts:
+        - name: node-1-volume
+          mountPath: /var/lib/indy
+      - name: node-2
+        image: registry.ng.bluemix.net/indyworld/von-base
+        command: ["bash", "-c",
+                  "./scripts/start_node.sh; sleep 3000"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 9703
+        - containerPort: 9704
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: NODEPORT
+          value: "9703"
+        - name: APIPORT
+          value: "9704"
+        - name: NODENUM
+          value: "2"
+        - name: KUBERNETES
+          value: "1"
+        volumeMounts:
+        - name: node-2-volume
+          mountPath: /var/lib/indy
+      - name: node-3
+        image: registry.ng.bluemix.net/indyworld/von-base
+        command: ["bash", "-c",
+                  "./scripts/start_node.sh; sleep 3000"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 9705
+        - containerPort: 9706
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: NODEPORT
+          value: "9705"
+        - name: APIPORT
+          value: "9706"
+        - name: NODENUM
+          value: "3"
+        - name: KUBERNETES
+          value: "1"
+        volumeMounts:
+        - name: node-3-volume
+          mountPath: /var/lib/indy
+      - name: node-4
+        image: registry.ng.bluemix.net/indyworld/von-base
+        command: ["bash", "-c",
+                  "./scripts/start_node.sh; sleep 3000"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 9707
+        - containerPort: 9708
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: NODEPORT
+          value: "9707"
+        - name: APIPORT
+          value: "9708"
+        - name: NODENUM
+          value: "4"
+        - name: KUBERNETES
+          value: "1"
+        volumeMounts:
+        - name: node-4-volume
+          mountPath: /var/lib/indy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: von-web
+spec:
+  ports:
+  - protocol: TCP
+    port: 8000
+    name: von-web
+  selector:
+    app: von-network
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-1
+spec:
+  ports:
+  - port: 9701
+    name: indy
+  - port: 9702
+    name: api
+  selector:
+    app: von-network
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-2
+spec:
+  ports:
+  - port: 9703
+    name: indy
+  - port: 9704
+    name: api
+  selector:
+    app: von-network
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-3
+spec:
+  ports:
+  - port: 9705
+    name: indy
+  - port: 9706
+    name: api
+  selector:
+    app: von-network
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-4
+spec:
+  ports:
+  - port: 9707
+    name: indy
+  - port: 9708
+    name: api
+  selector:
+    app: von-network
