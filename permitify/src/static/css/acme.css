@@ -54,11 +54,6 @@ pre {
   color: red;
 }
 
-@keyframes loading {
-  from {left: -100%; }
-  to { left: 100%; }
-}
-
 .btn.loading {
   background-color: #ddd;
   border-color: #bbb;
@@ -67,14 +62,4 @@ pre {
   overflow: hidden;
   position: relative;
   text-shadow:0 2px 2px #fff;
-}
-.btn.loading::before {
-  animation: loading 1s linear infinite;
-  background: linear-gradient(to right, #ddd, #2980b9, #ddd);
-  bottom: 0;
-  content: "";
-  height: 2px;
-  left: -100%;
-  position: absolute;
-  width: 50%;
 }

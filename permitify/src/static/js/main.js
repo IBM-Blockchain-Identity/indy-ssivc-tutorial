@@ -37,7 +37,7 @@ $(function () {
       data[select.name] = data[select.name].join(',')
     })
 
-    $(form).find('button[type=submit]').toggleClass('loading')
+    loading($(form).find('button[type=submit]'));
 
     $.ajax({
       method: 'POST',
@@ -45,18 +45,31 @@ $(function () {
       data: JSON.stringify(data),
       contentType: 'application/json'
     }).done(function (response) {
-      $(form).find('button[type=submit]').toggleClass('loading')
+      console.log(`Form submission succeeded: ${response}`);
+      notLoading($(form).find('button[type=submit]'));
       // This is used allow each template to implement its own response handler
       // if (FORM_HANDLERS[$(form).attr('name')]) {
       //   FORM_HANDLERS[$(form).attr('name')](form, response)
       // }
 
-      console.log('asdasdasd', THE_ORG_BOOK_APP_URL)
-
       window.location.replace(
         THE_ORG_BOOK_APP_URL + '/en/recipe/' + getParameterByName("recipe") + '?record=' +
         response.result.id
       )
+    }).fail(function (jqXHR, textStatus) {
+      console.error(`Form submission failed: ${JSON.stringify(jqXHR)}, ${textStatus}`);
+      notLoading($(form).find('button[type=submit]'));
     })
   })
 })
+
+
+function loading(element) {
+  element.find('.loader').attr('hidden', false);
+  element.addClass('loading');
+}
+
+function notLoading(element) {
+  element.find('.loader').attr('hidden', true);
+  element.removeClass('loading');
+}
