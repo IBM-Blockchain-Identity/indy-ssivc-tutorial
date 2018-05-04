@@ -25,24 +25,9 @@ spec:
       - name: node-4-volume
         emptyDir: {}
       containers:
-      - name: von-client
-        command: ["bash", "-c",
-                "./scripts/start_client.sh ; sleep 30000"]
-        image: registry.ng.bluemix.net/indyworld/von-base
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        ports:
-        - containerPort: 8000
-        env:
-        - name: GET_HOSTS_FROM
-          value: dns
-        - name: KUBERNETES
-          value: "1"
       - name: von-web
         command: ["bash", "-c",
-                "sleep 10000 & ./scripts/start_webserver.sh ; sleep 3000"]
+                "sleep 5 && ./scripts/start_webserver.sh"]
         image: registry.ng.bluemix.net/indyworld/von-base
         resources:
           requests:
