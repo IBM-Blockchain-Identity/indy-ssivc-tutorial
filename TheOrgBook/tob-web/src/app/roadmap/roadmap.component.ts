@@ -467,4 +467,10 @@ export class RoadmapComponent implements OnInit {
     this.page ++;
     this.paginate();
   }
+
+  getCred(claimType) {
+    const url = `${claimType.regLink}?source=bcorgbook&source_id=${this.recordId}&org_id=${this.orgRecord.orgId}&lang=${this.currentLang}&recipe=${this.recipeId}`;
+    console.log(`getCred() called. url: ${url}`);
+    window.location.href = url;
+  }
 }

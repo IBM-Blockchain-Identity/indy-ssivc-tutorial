@@ -60,7 +60,11 @@
   </div>
 
   <div class="mt-3 mb-3 row">
-    <button type="button" [class]="'btn btn-primary btn-lg' + (verifying ? ' loading' : '')" (click)="verifyClaim($event)"><span class="fas fa-check"></span> {{'cert.verify-button-label' | translate}}</button>
+    <button type="button" [class]="'btn btn-primary btn-lg' + (verifying ? ' loading' : '')" (click)="verifyClaim($event)">
+      <span *ngIf="!verifying"><i class="fas fa-check"></i></span>
+      <span *ngIf="verifying"><i class="fas fa-circle-notch fa-spin"></i></span>
+      {{'cert.verify-button-label' | translate}}
+    </button>
   </div>
 
   <div class="row cert-verify" *ngIf="verifyResult || verifying">

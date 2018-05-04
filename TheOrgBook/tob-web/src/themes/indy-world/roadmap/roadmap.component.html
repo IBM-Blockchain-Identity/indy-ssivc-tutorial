@@ -114,7 +114,11 @@
               <span class="claim-title">{{ claimType.title }}</span>
             </h2>
             <a href="" [routerLink]="['/org', recordId, 'cert', claimType.cert.id] | localize" class="btn btn-primary float-right" *ngIf="claimType.cert"><span class="fa fa-arrow-right"></span> {{ (claimType.linkText || 'recipe.cert-view-link') | translate }}</a>
-            <a [href]="claimType.regLink + '?source=bcorgbook&source_id='+recordId+'&org_id='+orgRecord.orgId+'&lang='+currentLang+'&recipe='+recipeId" class="btn btn-primary float-right" *ngIf="! claimType.cert"><span class="fas fa-address-card"></span> {{ claimType.regText }}</a>
+            <button [class]="'btn btn-primary float-right' + (claimType.isLoading ? ' loading' : '')" *ngIf="! claimType.cert" (click)="claimType.isLoading = true; getCred(claimType);">
+              <span *ngIf="!claimType.isLoading"><i class="fas fa-address-card"></i></span>
+              <span *ngIf="claimType.isLoading"><i class="fas fa-circle-notch fa-spin"></i></span>
+              {{ claimType.regText }}
+            </button>
           </div>
           <div class="card-body" *ngIf="claimType.cert">
             <dl class="row">
