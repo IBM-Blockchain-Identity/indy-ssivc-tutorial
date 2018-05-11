@@ -1,4 +1,5 @@
-FROM libindy:latest
+ARG imagenamespace
+FROM ${imagenamespace}libindy:latest
 
 # Install environment
 RUN apt-get update -y && apt-get install -y \
@@ -18,7 +19,7 @@ WORKDIR $HOME
 #   under random UID.
 RUN ln -sf /usr/bin/python3 /usr/bin/python
 RUN ln -sf /usr/bin/pip3 /usr/bin/pip
-RUN pip install virtualenv 
+RUN pip install virtualenv
 RUN virtualenv $HOME
 
 ARG indy_plenum_ver=1.2.237

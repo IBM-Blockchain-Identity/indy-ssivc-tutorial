@@ -1,4 +1,5 @@
-FROM libindy:latest
+ARG imagenamespace
+FROM ${imagenamespace}libindy:latest
 
 # Install environment
 RUN apt-get update -y && \

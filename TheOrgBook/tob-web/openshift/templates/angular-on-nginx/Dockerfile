@@ -1,6 +1,7 @@
 # Get community edition of nodejs v6.x
-FROM angular-app:latest as builder
-FROM nginx-runtime:latest
+ARG imagenamespace
+FROM ${imagenamespace}angular-app:latest as builder
+FROM ${imagenamespace}nginx-runtime:latest
 
 # Copy the build artifacts from the 'builder' image
 # to the distribution folder on the runtime image.

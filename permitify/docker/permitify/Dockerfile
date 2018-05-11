@@ -1,4 +1,5 @@
-FROM python-libindy:latest
+ARG imagenamespace
+FROM ${imagenamespace}python-libindy:latest
 
 ENV HOME=/app
 WORKDIR $HOME
