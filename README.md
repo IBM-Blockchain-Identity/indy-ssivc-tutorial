@@ -10,7 +10,7 @@ This repo provides a hands on tutorial as well as a [narrated video recording](.
 
 ## Acknowledgments
 
-As part of an initiative to manage [Verifiable Organizations with Self-Sovereign Identities](https://von.pathfinder.gov.bc.ca), the  Government for the [Province of British Columbia](https://www2.gov.bc.ca) ("BC-Gov") has contributed several [open-source projects](https://github.com/bcgov) that are helpful in bootstrapping new applications that make use of [Hyperledger Indy](https://wiki.hyperledger.org/projects/indy) ("Indy") and [Verifiable Credentials](https://www.w3.org/TR/verifiable-claims-data-model/). This Indy World Demo is derived from the [permitify](https://github.com/bcgov/permitify) and [von-network](https://github.com/bcgov/von-network) repositories. 
+As part of an initiative to manage [Verifiable Organizations with Self-Sovereign Identities](https://von.pathfinder.gov.bc.ca), the  Government for the [Province of British Columbia](https://www2.gov.bc.ca) ("BC-Gov") in partnership with [Public Services and Procurement Canada](https://www.canada.ca/en/public-services-procurement.html) and the [Government of Ontario](https://www.ontario.ca/page/government-ontario), has contributed several [open-source projects](https://github.com/bcgov) that are helpful in bootstrapping new applications that make use of [Hyperledger Indy](https://wiki.hyperledger.org/projects/indy) ("Indy") and [Verifiable Credentials](https://www.w3.org/TR/verifiable-claims-data-model/). This Indy World Demo is derived from the [permitify](https://github.com/bcgov/permitify) and [von-network](https://github.com/bcgov/von-network) repositories. 
 
 ## Overview
 
