@@ -4,7 +4,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { GeneralDataService } from 'app/general-data.service';
 import { Location, LocationType, VerifiableOrg, VerifiableOrgType, IssuerService, VerifiableClaim, VerifiableClaimType, DoingBusinessAs,
   blankLocation, blankOrgType, blankLocationType, blankIssuerService, blankClaimType } from '../data-types';
-import * as compareVersions from 'compare-versions';
 
 @Component({
   selector: 'app-roadmap',
@@ -67,7 +66,6 @@ export class RoadmapComponent implements OnInit {
             let sname = regType.schemaName;
             let other = typesBySchema[sname];
 
-            // if(other && compareVersions(regType.schemaVersion, other.schemaVersion) <= 0)
             if(other && other.id < regType.id)
               continue;
 
