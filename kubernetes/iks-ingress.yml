@@ -1,0 +1,84 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: indyworld-ingress
+  annotations:
+    ingress.bluemix.net/redirect-to-https: "True"
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+  - hosts:
+    - indyworld.$INGRESS_SUBDOMAIN
+    - indyworld-von-web.$INGRESS_SUBDOMAIN
+    - indyworld-api.$INGRESS_SUBDOMAIN
+    - indyworld-schema-spy.$INGRESS_SUBDOMAIN
+    - indyworld-person.$INGRESS_SUBDOMAIN
+    - indyworld-faber.$INGRESS_SUBDOMAIN
+    - indyworld-acme-corp.$INGRESS_SUBDOMAIN
+    - indyworld-acme-corp-apply.$INGRESS_SUBDOMAIN
+    - indyworld-thrift.$INGRESS_SUBDOMAIN
+    secretName: $TLS_SECRET_NAME
+  rules:
+  - host: indyworld.$INGRESS_SUBDOMAIN
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tob-web
+          servicePort: 8080
+  - host: indyworld-api.$INGRESS_SUBDOMAIN
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tob-api
+          servicePort: 8080
+  - host: indyworld-von-web.$INGRESS_SUBDOMAIN
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: von-web
+          servicePort: 8000
+  - host: indyworld-schema-spy.$INGRESS_SUBDOMAIN
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: schema-spy
+          servicePort: 8080
+  - host: indyworld-person.$INGRESS_SUBDOMAIN
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: person
+          servicePort: 8080
+  - host: indyworld-faber.$INGRESS_SUBDOMAIN
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: faber
+          servicePort: 8080
+  - host: indyworld-acme-corp.$INGRESS_SUBDOMAIN
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: acme-corp
+          servicePort: 8080
+  - host: indyworld-acme-corp-apply.$INGRESS_SUBDOMAIN
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: acme-corp-apply
+          servicePort: 8080
+  - host: indyworld-thrift.$INGRESS_SUBDOMAIN
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: thrift-bank
+          servicePort: 8080

@@ -15,7 +15,7 @@ spec:
         - name: bluemix-default-secret
       containers:
       - name: person
-        image: registry.ng.bluemix.net/indyworld/permitify
+        image: $REGISTRY/permitify
         resources:
           requests:
             cpu: 100m
@@ -34,7 +34,7 @@ spec:
         - name: THE_ORG_BOOK_API_URL
           value: http://tob-api:8080/api/v1
         - name: THE_ORG_BOOK_APP_URL
-          value: https://indyworld.vcreds.org
+          value: https://indyworld.$INGRESS_SUBDOMAIN
         - name: TEMPLATE_NAME
           value: person
         - name: INDY_WALLET_SEED
@@ -48,7 +48,7 @@ spec:
         - name: LEDGER_URL
           value: http://von-web:8000
         - name: APPLICATION_URL
-          value: https://indyworld-person.vcreds.org
+          value: https://indyworld-person.$INGRESS_SUBDOMAIN
 ---
 apiVersion: v1
 kind: Service
@@ -78,7 +78,7 @@ spec:
         - name: bluemix-default-secret
       containers:
       - name: dmv
-        image: registry.ng.bluemix.net/indyworld/permitify
+        image: $REGISTRY/permitify
         resources:
           requests:
             cpu: 100m
@@ -97,7 +97,7 @@ spec:
         - name: THE_ORG_BOOK_API_URL
           value: http://tob-api:8080/api/v1
         - name: THE_ORG_BOOK_APP_URL
-          value: https://indyworld.vcreds.org
+          value: https://indyworld.$INGRESS_SUBDOMAIN
         - name: TEMPLATE_NAME
           value: faber_college
         - name: INDY_WALLET_SEED
@@ -111,7 +111,7 @@ spec:
         - name: LEDGER_URL
           value: http://von-web:8000
         - name: APPLICATION_URL
-          value: https://indyworld-faber.vcreds.org
+          value: https://indyworld-faber.$INGRESS_SUBDOMAIN
 ---
 apiVersion: v1
 kind: Service
@@ -141,7 +141,7 @@ spec:
         - name: bluemix-default-secret
       containers:
       - name: thrift-bank
-        image: registry.ng.bluemix.net/indyworld/permitify
+        image: $REGISTRY/permitify
         resources:
           requests:
             cpu: 100m
@@ -160,7 +160,7 @@ spec:
         - name: THE_ORG_BOOK_API_URL
           value: http://tob-api:8080/api/v1
         - name: THE_ORG_BOOK_APP_URL
-          value: https://indyworld.vcreds.org
+          value: https://indyworld.$INGRESS_SUBDOMAIN
         - name: TEMPLATE_NAME
           value: acme_corp
         - name: INDY_WALLET_SEED
@@ -174,7 +174,7 @@ spec:
         - name: LEDGER_URL
           value: http://von-web:8000
         - name: APPLICATION_URL
-          value: https://indyworld-acme-corp.vcreds.org
+          value: https://indyworld-acme-corp.$INGRESS_SUBDOMAIN
 ---
 apiVersion: v1
 kind: Service
@@ -204,7 +204,7 @@ spec:
         - name: bluemix-default-secret
       containers:
       - name: thrift-bank
-        image: registry.ng.bluemix.net/indyworld/permitify
+        image: $REGISTRY/permitify
         resources:
           requests:
             cpu: 100m
@@ -223,7 +223,7 @@ spec:
         - name: THE_ORG_BOOK_API_URL
           value: http://tob-api:8080/api/v1
         - name: THE_ORG_BOOK_APP_URL
-          value: https://indyworld.vcreds.org
+          value: https://indyworld.$INGRESS_SUBDOMAIN
         - name: TEMPLATE_NAME
           value: acme_corp_apply
         - name: INDY_WALLET_SEED
@@ -237,7 +237,7 @@ spec:
         - name: LEDGER_URL
           value: http://von-web:8000
         - name: APPLICATION_URL
-          value: https://indyworld-acme-corp-apply.vcreds.org
+          value: https://indyworld-acme-corp-apply.$INGRESS_SUBDOMAIN
 ---
 apiVersion: v1
 kind: Service
@@ -267,7 +267,7 @@ spec:
         - name: bluemix-default-secret
       containers:
       - name: thrift-bank
-        image: registry.ng.bluemix.net/indyworld/permitify
+        image: $REGISTRY/permitify
         resources:
           requests:
             cpu: 100m
@@ -286,7 +286,7 @@ spec:
         - name: THE_ORG_BOOK_API_URL
           value: http://tob-api:8080/api/v1
         - name: THE_ORG_BOOK_APP_URL
-          value: https://indyworld.vcreds.org
+          value: https://indyworld.$INGRESS_SUBDOMAIN
         - name: TEMPLATE_NAME
           value: thrift_bank
         - name: INDY_WALLET_SEED
@@ -300,7 +300,7 @@ spec:
         - name: LEDGER_URL
           value: http://von-web:8000
         - name: APPLICATION_URL
-          value: https://indyworld-thrift.vcreds.org
+          value: https://indyworld-thrift.$INGRESS_SUBDOMAIN
 ---
 apiVersion: v1
 kind: Service

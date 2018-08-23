@@ -28,7 +28,7 @@ spec:
       - name: von-web
         command: ["bash", "-c",
                 "sleep 5 && ./scripts/start_webserver.sh"]
-        image: registry.ng.bluemix.net/indyworld/von-base
+        image: $REGISTRY/von-base
         resources:
           requests:
             cpu: 100m
@@ -50,7 +50,7 @@ spec:
         - name: node-4-volume
           mountPath: /home/indy/.mnt/node4
       - name: node-1
-        image: registry.ng.bluemix.net/indyworld/von-base
+        image: $REGISTRY/von-base
         command: ["bash", "-c",
                   "./scripts/start_node.sh; sleep 3000"]
         resources:
@@ -75,7 +75,7 @@ spec:
         - name: node-1-volume
           mountPath: /var/lib/indy
       - name: node-2
-        image: registry.ng.bluemix.net/indyworld/von-base
+        image: $REGISTRY/von-base
         command: ["bash", "-c",
                   "./scripts/start_node.sh; sleep 3000"]
         resources:
@@ -100,7 +100,7 @@ spec:
         - name: node-2-volume
           mountPath: /var/lib/indy
       - name: node-3
-        image: registry.ng.bluemix.net/indyworld/von-base
+        image: $REGISTRY/von-base
         command: ["bash", "-c",
                   "./scripts/start_node.sh; sleep 3000"]
         resources:
@@ -125,7 +125,7 @@ spec:
         - name: node-3-volume
           mountPath: /var/lib/indy
       - name: node-4
-        image: registry.ng.bluemix.net/indyworld/von-base
+        image: $REGISTRY/von-base
         command: ["bash", "-c",
                   "./scripts/start_node.sh; sleep 3000"]
         resources:

@@ -57,7 +57,7 @@ spec:
         - name: bluemix-default-secret
       containers:
       - name: tob-solr
-        image: registry.ng.bluemix.net/indyworld/solr
+        image: $REGISTRY/solr
         resources:
           requests:
             cpu: 100m
@@ -97,7 +97,7 @@ spec:
         - name: bluemix-default-secret
       containers:
       - name: tob-api
-        image: registry.ng.bluemix.net/indyworld/django
+        image: $REGISTRY/django
         resources:
           requests:
             cpu: 100m
@@ -166,7 +166,7 @@ spec:
         - name: bluemix-default-secret
       containers:
       - name: tob-web
-        image: registry.ng.bluemix.net/indyworld/angular-on-nginx
+        image: $REGISTRY/angular-on-nginx
         resources:
           requests:
             cpu: 100m
@@ -214,7 +214,7 @@ spec:
         - name: bluemix-default-secret
       containers:
       - name: schema-spy
-        image: registry.ng.bluemix.net/indyworld/schema-spy
+        image: $REGISTRY/schema-spy
         resources:
           requests:
             cpu: 100m

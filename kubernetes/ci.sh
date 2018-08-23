@@ -1,27 +1,26 @@
 buildImages() {
 
   echo Logging into Bluemix...
-  bx api api.ng.bluemix.net
-  bx login --apikey ${BLUEMIX_APIKEY}
+  ibmcloud api api.$API_REGION.bluemix.net
+  ibmcloud login --apikey ${BLUEMIX_API_KEY}
 
-  OUT=$(bx cr)
+  OUT=$(ibmcloud cr)
   if [ $? -ne 0 ]; then
    echo "We need the container registry plugin to do this stuff. Grabbing it..."
-   bx plugin install -f container-registry
+   ibmcloud plugin install -f container-registry
   else
     echo "Container registry plugin is installed."
   fi
 
   echo Configuring Docker for the IBM Container Registry...
-  bx cr login
-
-  export NAMESPACE=indyworld
+  ibmcloud cr login
 
   echo ---------------------------------
   echo VON-NETWORK IMAGE
   echo ---------------------------------
 
-  bx cr build -t registry.ng.bluemix.net/$NAMESPACE/von-base ./von-network
+  ${DOCKER_BUILDER} -t $REGISTRY/von-base ./von-network
+  docker push $REGISTRY/von-base
 
   echo ---------------------------------
   echo THE ORG BOOK IMAGES
@@ -33,27 +32,27 @@ buildImages() {
 
   docker build \
     https://github.com/bcgov/openshift-solr.git \
-    -t $NAMESPACE/solr-base
+    -t $REG_NAMESPACE/solr-base
 
   echo Building solr deployable image...
-  s2i build ./TheOrgBook/tob-solr/cores $NAMESPACE/solr-base registry.ng.bluemix.net/$NAMESPACE/solr
+  s2i build ./TheOrgBook/tob-solr/cores $REG_NAMESPACE/solr-base $REGISTRY/solr
 
   echo Pushing solr image...
-  docker push registry.ng.bluemix.net/$NAMESPACE/solr
+  docker push $REGISTRY/solr
 
   echo ** SCHEMA SPY **
 
   echo Building schema-spy image...
-  docker build -t registry.ng.bluemix.net/$NAMESPACE/schema-spy \
+  docker build -t $REGISTRY/schema-spy \
     https://github.com/bcgov/SchemaSpy.git
 
   echo Pushing the schema-spy image...
-  docker push registry.ng.bluemix.net/$NAMESPACE/schema-spy
+  docker push $REGISTRY/schema-spy
 
   echo ** TOB WEB **
 
   echo First the nginx-runtime image...
-  docker build -t $NAMESPACE/nginx-runtime \
+  docker build -t $REG_NAMESPACE/nginx-runtime \
     -f TheOrgBook/tob-web/openshift/templates/nginx-runtime/Dockerfile \
     TheOrgBook/tob-web/openshift/templates/nginx-runtime/
 
@@ -61,39 +60,39 @@ buildImages() {
   s2i build -e "NG_BASE_HREF=/" \
     -e "TOB_THEME=indy-world" \
     TheOrgBook/tob-web centos/nodejs-6-centos7:6 \
-    $NAMESPACE/angular-app
+    $REG_NAMESPACE/angular-app
 
   echo And finally the angular-on-nginx image...
-  docker build --build-arg imagenamespace=$NAMESPACE/ \
-    -t registry.ng.bluemix.net/$NAMESPACE/angular-on-nginx \
+  docker build --build-arg imagenamespace=$REG_NAMESPACE/ \
+    -t $REGISTRY/angular-on-nginx \
     -f TheOrgBook/tob-web/openshift/templates/angular-on-nginx/Dockerfile \
     TheOrgBook/tob-web/openshift/templates/angular-on-nginx
 
   echo And pushing that out...
-  docker push registry.ng.bluemix.net/$NAMESPACE/angular-on-nginx
+  docker push $REGISTRY/angular-on-nginx
 
   echo ** TOB API **
 
   echo Building the libindy image...
 
-  docker build -t $NAMESPACE/libindy \
+  docker build -t $REG_NAMESPACE/libindy \
     -f TheOrgBook/tob-api/openshift/templates/libindy/Dockerfile \
     TheOrgBook/tob-api/openshift/templates/libindy/
 
   echo Building the python-libindy image...
-  docker build -t $NAMESPACE/python-libindy \
-    --build-arg imagenamespace=$NAMESPACE/ \
+  docker build -t $REG_NAMESPACE/python-libindy \
+    --build-arg imagenamespace=$REG_NAMESPACE/ \
     -f TheOrgBook/tob-api/openshift/templates/python-libindy/Dockerfile \
     TheOrgBook/tob-api/openshift/templates/python-libindy/
 
   echo Building the tob-api deployable image...
   s2i build TheOrgBook/tob-api \
-    $NAMESPACE/python-libindy \
-    registry.ng.bluemix.net/$NAMESPACE/django
+    $REG_NAMESPACE/python-libindy \
+    $REGISTRY/django
 
   echo Pushing out the tob-api image...
 
-  docker push registry.ng.bluemix.net/$NAMESPACE/django
+  docker push $REGISTRY/django
 
 
   echo ---------------------------------
@@ -102,39 +101,40 @@ buildImages() {
 
   echo Building libindy...
 
-  docker build -t $NAMESPACE/libindy \
+  docker build -t $REG_NAMESPACE/libindy \
     -f permitify/docker/libindy/Dockerfile \
     permitify/docker/libindy/
 
   echo Building libindy-python...
 
-  docker build -t $NAMESPACE/python-libindy \
-    --build-arg imagenamespace=$NAMESPACE/ \
+  docker build -t $REG_NAMESPACE/python-libindy \
+    --build-arg imagenamespace=$REG_NAMESPACE/ \
     -f permitify/docker/python-libindy/Dockerfile \
     permitify/docker/python-libindy/
 
   echo Building permitify-dmv image...
 
-  docker build -t registry.ng.bluemix.net/$NAMESPACE/permitify \
-    --build-arg imagenamespace=$NAMESPACE/ \
+  docker build -t $REGISTRY/permitify \
+    --build-arg imagenamespace=$REG_NAMESPACE/ \
     -f permitify/docker/permitify/Dockerfile \
     permitify/
 
   echo And pushing it out...
-  docker push registry.ng.bluemix.net/$NAMESPACE/permitify
+  docker push $REGISTRY/permitify
 }
 
 deployLatest() {
   echo Logging into Bluemix ...
 
-  bx api api.ng.bluemix.net
-  bx login --apikey ${BLUEMIX_APIKEY}
+  ibmcloud api api.$API_REGION.bluemix.net
+  ibmcloud login --apikey ${BLUEMIX_API_KEY}
+  ibmcloud cs region-set ${IKS_REGION}
 
-  echo Setting up Kubernetes client to use indy world cluster...
-  $(bx cs cluster-config new-indy-world --export)
+  echo Setting up Kubernetes client to use $IKS_CLUSTER_NAME cluster for indy world demo...
+  $(ibmcloud cs cluster-config ${IKS_CLUSTER_NAME} --export)
 
-  echo Using bankkyc namespace...
-  kubectl config set-context $(kubectl config current-context) --namespace=bankkyc
+  echo Using $KUBE_NAMESPACE namespace...
+  kubectl config set-context $(kubectl config current-context) --namespace=$KUBE_NAMESPACE
 
   echo The currently running pods are...
   kubectl get pods
@@ -145,15 +145,38 @@ deployLatest() {
   kubectl delete deployments --all
 
   echo Deploying von-network...
-  kubectl apply -f von-network.yml
-  sleep 30
+  # Substitute image registry
+  sed -e s/\$REGISTRY/$REGISTRY/g \
+    von-network.yml | \
+    kubectl --namespace $KUBE_NAMESPACE apply -f -
+  sleep 120
 
   echo Deploying theorgbook...
-  kubectl apply -f theorgbook.yml
-  sleep 45
+  sed -e s/\$REGISTRY/$REGISTRY/g \
+    theorgbook.yml | \
+    kubectl --namespace $KUBE_NAMESPACE apply -f -
+  sleep 120
 
   echo Deploying permitify...
-  kubectl apply -f permitify.yml
+  sed -e s/\$REGISTRY/$REGISTRY/g \
+    -e s/\$INGRESS_SUBDOMAIN/${INGRESS_SUBDOMAIN}/g \
+    permitify.yml | \
+    kubectl --namespace $KUBE_NAMESPACE apply -f -
+
+  echo Deploying ingress
+  sed -e s/\$INGRESS_SUBDOMAIN/${INGRESS_SUBDOMAIN}/g \
+    -e s/\$TLS_SECRET_NAME/${TLS_SECRET_NAME}/g \
+    iks-ingress.yml | \
+    kubectl -n bankkyc apply -f -
+}
+
+deployIngress() {
+
+  echo Deploying ingress
+  sed -e s/\$INGRESS_SUBDOMAIN/${INGRESS_SUBDOMAIN}/g \
+    iks-ingress.yml | \
+    kubectl -n bankkyc apply -f -
+
 }
 
 certs() {
@@ -167,10 +190,11 @@ usage() {
 
   Usage: $0 {build|deploy|certs}
 
-  build   Logs into Bluemix using BLUEMIX_APIKEY environment variable
+  build   Logs into Bluemix using BLUEMIX_API_KEY environment variable
           and builds all the images in this project. Where possible, it
-          uses the bx cr command instead of docker build, so as to limit
-          the amount of disk space used (bx cr images get built on ICS servers)
+          uses the ibmcloud cr command instead of docker build, so as to
+          limit the amount of disk space used (ibmcloud cr images get built
+          on IKS servers)
 
           When finished, everything in the namespace for this project should
           be the latest images built based on master.
@@ -183,6 +207,28 @@ usage() {
 
 EOF
 exit 1
+}
+
+# if Using IBM Container Registry service
+#export REG_REGION=au-syd
+#export REG_NAMESPACE=iwinoto_ibm
+#export REGISTRY=registry.$REG_REGION.bluemix.net/$REG_NAMESPACE
+#export DOCKER_BUILDER="ibmcloud cr build"
+
+# If using Docker hub as image registry
+export REG_NAMESPACE=iwinoto
+export REGISTRY=$REG_NAMESPACE
+export DOCKER_BUILDER="docker build"
+
+# Region for IBM Cloud api endpoint
+export API_REGION=au-syd
+
+# Parameters for IBM Cloud Kubernetes Service (IKS)
+export IKS_REGION=us-east
+export IKS_CLUSTER_NAME=wcp-tech-workshop-mz
+export KUBE_NAMESPACE=bankkyc
+export INGRESS_SUBDOMAIN=wcp-tech-workshop-mz.us-east.containers.appdomain.cloud
+export TLS_SECRET_NAME=wcp-tech-workshop-mz
 
 case "$1" in
   build)
@@ -190,6 +236,9 @@ case "$1" in
     ;;
   deploy)
     deployLatest
+    ;;
+  ingress)
+    deployIngress
     ;;
   certs)
     certs
