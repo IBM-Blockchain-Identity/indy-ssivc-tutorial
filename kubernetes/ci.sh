@@ -133,6 +133,15 @@ deployLatest() {
   echo Setting up Kubernetes client to use $IKS_CLUSTER_NAME cluster for indy world demo...
   $(ibmcloud cs cluster-config ${IKS_CLUSTER_NAME} --export)
 
+  echo Checking for namespace $KUBE_NAMESPACE
+  if [ -z $(kubectl get namespace | grep ^$KUBE_NAMESPACE -i)]
+  then
+    echo "Namespace $KUBE_NAMESPACE does not exist. Creating..."
+    kubectl create namespace $KUBE_NAMESPACE
+  else
+    echo "Namespace $KUBE_NAMESPACE already exists."
+  fi
+
   echo Using $KUBE_NAMESPACE namespace...
   kubectl config set-context $(kubectl config current-context) --namespace=$KUBE_NAMESPACE
 
@@ -149,13 +158,15 @@ deployLatest() {
   sed -e s/\$REGISTRY/$REGISTRY/g \
     von-network.yml | \
     kubectl --namespace $KUBE_NAMESPACE apply -f -
-  sleep 120
+  echo "Waiting 120 seconds for containers to complete initialisation"
+  countdown 120
 
   echo Deploying theorgbook...
   sed -e s/\$REGISTRY/$REGISTRY/g \
     theorgbook.yml | \
     kubectl --namespace $KUBE_NAMESPACE apply -f -
-  sleep 120
+  echo "Waiting 120 seconds for containers to complete initialisation"
+  countdown 120
 
   echo Deploying permitify...
   sed -e s/\$REGISTRY/$REGISTRY/g \
@@ -163,19 +174,19 @@ deployLatest() {
     permitify.yml | \
     kubectl --namespace $KUBE_NAMESPACE apply -f -
 
-  echo Deploying ingress
-  sed -e s/\$INGRESS_SUBDOMAIN/${INGRESS_SUBDOMAIN}/g \
-    -e s/\$TLS_SECRET_NAME/${TLS_SECRET_NAME}/g \
-    iks-ingress.yml | \
-    kubectl -n bankkyc apply -f -
+  deployIngress
+
+  echo Indy world is deployed to namespace $KUBE_NAMESPACE
+  echo Please wait a couple of minutes for containers to complete initialisation.
 }
 
 deployIngress() {
 
   echo Deploying ingress
   sed -e s/\$INGRESS_SUBDOMAIN/${INGRESS_SUBDOMAIN}/g \
+    -e s/\$TLS_SECRET_NAME/${TLS_SECRET_NAME}/g \
     iks-ingress.yml | \
-    kubectl -n bankkyc apply -f -
+    kubectl -n $KUBE_NAMESPACE apply -f -
 
 }
 
@@ -184,6 +195,15 @@ certs() {
   exit 1
 }
 
+countdown() {
+  secs=$1
+  echo "Seconds remaining:"
+  while [ $secs -gt 0 ]; do
+    echo -ne "$secs\033[0K\r"
+    sleep 1
+    : $((secs--))
+  done
+}
 
 usage() {
   cat <<-EOF
@@ -224,11 +244,11 @@ export DOCKER_BUILDER="docker build"
 export API_REGION=au-syd
 
 # Parameters for IBM Cloud Kubernetes Service (IKS)
-export IKS_REGION=us-east
-export IKS_CLUSTER_NAME=wcp-tech-workshop-mz
+export IKS_REGION=ap-south
+export IKS_CLUSTER_NAME=iw-iks-demo
 export KUBE_NAMESPACE=bankkyc
-export INGRESS_SUBDOMAIN=wcp-tech-workshop-mz.us-east.containers.appdomain.cloud
-export TLS_SECRET_NAME=wcp-tech-workshop-mz
+export INGRESS_SUBDOMAIN=iw-iks-demo.au-syd.containers.appdomain.cloud
+export TLS_SECRET_NAME=iw-iks-demo
 
 case "$1" in
   build)
