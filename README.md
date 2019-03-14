@@ -1,3 +1,5 @@
+> This repository is deprecated and is no longer being maintained.
+
 # Indy World Demo
 
 The Indy World Demo implements the **Alice Demo** described in [Getting Started with Indy](https://github.com/hyperledger/indy-node/blob/stable/getting-started.md). The demo shows how a self-sovereign identity ("SSI") can be used to obtain credentials from an issuer and supply these credentials to a verifier in response to a proof request thus providing a verifiable proof.
