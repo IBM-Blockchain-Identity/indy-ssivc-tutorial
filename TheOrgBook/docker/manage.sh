@@ -1,7 +1,8 @@
 #!/bin/bash
 # My addition; allow Dockerhost to be overridden
 # (useful when running a Softlayer VM with docker compose for example)
-export DOCKERHOST=${DOCKERHOST-$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)}
+# export DOCKERHOST=${DOCKERHOST-$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)}
+export DOCKERHOST=${APPLICATION_URL-$(docker run --rm --net=host codenvy/che-ip)}
 export MSYS_NO_PATHCONV=1
 set -e
 
